@@ -28,7 +28,7 @@ export function WorkspacePreview({ imageUrl, fileFamily, fileName, state }: Prop
 
       {fileFamily === 'pdf' && (
         <div className="text-center py-16">
-          <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-error-light rounded-2xl flex items-center justify-center mx-auto mb-4">
             <span className="text-3xl">📄</span>
           </div>
           <p className="text-h3 text-txt-strong">{fileName}</p>
@@ -38,7 +38,7 @@ export function WorkspacePreview({ imageUrl, fileFamily, fileName, state }: Prop
 
       {fileFamily === 'document' && (
         <div className="text-center py-16">
-          <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-info-light rounded-2xl flex items-center justify-center mx-auto mb-4">
             <span className="text-3xl">📝</span>
           </div>
           <p className="text-h3 text-txt-strong">{fileName}</p>
@@ -48,7 +48,7 @@ export function WorkspacePreview({ imageUrl, fileFamily, fileName, state }: Prop
 
       {fileFamily === 'other' && (
         <div className="text-center py-16">
-          <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-bg-soft rounded-2xl flex items-center justify-center mx-auto mb-4">
             <span className="text-3xl">📎</span>
           </div>
           <p className="text-h3 text-txt-strong">{fileName}</p>
@@ -64,3 +64,4 @@ export function WorkspacePreview({ imageUrl, fileFamily, fileName, state }: Prop
     </div>
   );
 }
+

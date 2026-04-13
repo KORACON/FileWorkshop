@@ -14,10 +14,10 @@ export function CtaSection() {
               Базовые инструменты бесплатны. Зарегистрируйтесь для доступа к истории, пакетной обработке и расширенным функциям.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link href="/register" className="bg-white text-primary font-medium px-6 py-3 rounded-button hover:bg-primary-50 transition-colors text-body">
+              <Link href="/register" className="bg-surface text-primary font-medium px-6 py-3 rounded-button hover:bg-primary-50 transition-colors text-body">
                 Создать аккаунт
               </Link>
-              <Link href="/pricing" className="border border-white/30 text-white font-medium px-6 py-3 rounded-button hover:bg-white/10 transition-colors text-body">
+              <Link href="/pricing" className="border border-white/30 text-white font-medium px-6 py-3 rounded-button hover:bg-surface/10 transition-colors text-body">
                 Посмотреть тарифы
               </Link>
             </div>
@@ -27,3 +27,4 @@ export function CtaSection() {
     </section>
   );
 }
+

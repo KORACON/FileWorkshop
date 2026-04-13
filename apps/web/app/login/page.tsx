@@ -50,22 +50,22 @@ export default function LoginPage() {
           <h1 className="text-2xl font-bold text-center mb-6">Вход</h1>
 
           {serverError && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+            <div className="mb-4 p-3 bg-error-light border border-error/20 rounded-lg text-sm text-error-text">
               {serverError}
             </div>
           )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+              <label htmlFor="email" className="block text-sm font-medium text-txt-base mb-1">Email</label>
               <input id="email" type="email" autoComplete="email" className="input-field" placeholder="you@example.com" {...register('email')} />
-              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
+              {errors.email && <p className="mt-1 text-sm text-error">{errors.email.message}</p>}
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1">Пароль</label>
+              <label htmlFor="password" className="block text-sm font-medium text-txt-base mb-1">Пароль</label>
               <input id="password" type="password" autoComplete="current-password" className="input-field" {...register('password')} />
-              {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
+              {errors.password && <p className="mt-1 text-sm text-error">{errors.password.message}</p>}
             </div>
 
             <button type="submit" disabled={isSubmitting} className="btn-primary w-full flex items-center justify-center gap-2">
@@ -74,7 +74,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <p className="mt-4 text-center text-sm text-slate-500">
+          <p className="mt-4 text-center text-sm text-txt-muted">
             Нет аккаунта?{' '}
             <Link href="/register" className="text-primary-600 hover:text-primary-500 font-medium">Зарегистрироваться</Link>
           </p>
@@ -83,3 +83,4 @@ export default function LoginPage() {
     </div>
   );
 }
+

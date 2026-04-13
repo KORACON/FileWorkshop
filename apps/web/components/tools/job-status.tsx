@@ -40,8 +40,8 @@ export function JobStatusDisplay({ job, isPolling, pollingError, onDownload, onN
             <span className="text-2xl">⏳</span>
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-700">В очереди</p>
-            <p className="text-xs text-slate-400">Задача ожидает обработки...</p>
+            <p className="text-sm font-medium text-txt-base">В очереди</p>
+            <p className="text-xs text-txt-faint">Задача ожидает обработки...</p>
           </div>
         </div>
       </div>
@@ -55,8 +55,8 @@ export function JobStatusDisplay({ job, isPolling, pollingError, onDownload, onN
         <div className="flex items-center gap-3">
           <span className="animate-spin text-2xl">⚙️</span>
           <div className="flex-1">
-            <p className="text-sm font-medium text-slate-700">Обработка...</p>
-            <div className="mt-2 h-2 bg-slate-100 rounded-full overflow-hidden">
+            <p className="text-sm font-medium text-txt-base">Обработка...</p>
+            <div className="mt-2 h-2 bg-bg-soft rounded-full overflow-hidden">
               <div className="h-full bg-primary-500 rounded-full animate-pulse" style={{ width: '60%' }} />
             </div>
           </div>
@@ -70,13 +70,13 @@ export function JobStatusDisplay({ job, isPolling, pollingError, onDownload, onN
     const hasSizeInfo = job.fileSizeBefore > 0 && job.fileSizeAfter != null;
 
     return (
-      <div className="card border-green-200 bg-green-50">
+      <div className="card border-success/20 bg-success-light">
         <div className="flex items-center gap-3 mb-4">
           <span className="text-2xl">✅</span>
           <div>
             <p className="text-sm font-medium text-green-800">Готово</p>
             {hasSizeInfo && (
-              <p className="text-xs text-green-600">
+              <p className="text-xs text-success">
                 {formatFileSize(job.fileSizeBefore)} → {formatFileSize(job.fileSizeAfter!)}
                 {' '}
                 <span className="font-medium">
@@ -105,13 +105,13 @@ export function JobStatusDisplay({ job, isPolling, pollingError, onDownload, onN
   // ERROR
   if (job.status === 'ERROR') {
     return (
-      <div className="card border-red-200 bg-red-50">
+      <div className="card border-error/20 bg-error-light">
         <div className="flex items-center gap-3 mb-3">
           <span className="text-2xl">❌</span>
           <div>
             <p className="text-sm font-medium text-red-800">Ошибка обработки</p>
             {job.errorMessage && (
-              <p className="text-xs text-red-600 mt-1">{job.errorMessage}</p>
+              <p className="text-xs text-error mt-1">{job.errorMessage}</p>
             )}
           </div>
         </div>
@@ -124,10 +124,10 @@ export function JobStatusDisplay({ job, isPolling, pollingError, onDownload, onN
 
   // CANCELED
   return (
-    <div className="card border-slate-200">
+    <div className="card border-border">
       <div className="flex items-center gap-3">
         <span className="text-2xl">🚫</span>
-        <p className="text-sm text-slate-500">Операция отменена</p>
+        <p className="text-sm text-txt-muted">Операция отменена</p>
       </div>
       <button onClick={onNewFile} className="btn-secondary text-sm mt-3">
         Загрузить файл
@@ -135,3 +135,4 @@ export function JobStatusDisplay({ job, isPolling, pollingError, onDownload, onN
     </div>
   );
 }
+

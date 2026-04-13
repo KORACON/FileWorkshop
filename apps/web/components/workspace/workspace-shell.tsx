@@ -115,6 +115,7 @@ export function WorkspaceShell() {
         <WorkspaceToolbar
           file={ws.file}
           fileFamily={ws.fileFamily}
+          fileInfo={ws.fileInfo}
           actions={actions}
           currentAction={ws.selectedAction}
           onSelectAction={ws.selectAction}
@@ -203,7 +204,7 @@ export function WorkspaceShell() {
 
               {/* Upload error */}
               {uploadError && (
-                <div className="mx-3 mb-3 p-2.5 bg-error-light border border-red-200 rounded-badge text-caption text-error-text flex-shrink-0">
+                <div className="mx-3 mb-3 p-2.5 bg-error-light border border-error/20 rounded-badge text-caption text-error-text flex-shrink-0">
                   {uploadError}
                 </div>
               )}

@@ -69,7 +69,7 @@ export function HistoryTable({ items, onDelete, isDeleting }: Props) {
   if (items.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-slate-400 text-sm">Нет операций</p>
+        <p className="text-txt-faint text-sm">Нет операций</p>
       </div>
     );
   }
@@ -79,16 +79,16 @@ export function HistoryTable({ items, onDelete, isDeleting }: Props) {
       {items.map((item) => (
         <div
           key={item.id}
-          className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 bg-slate-50 rounded-lg"
+          className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 bg-bg-soft rounded-lg"
         >
           {/* Статус + файл */}
           <div className="flex items-center gap-3 min-w-0 flex-1">
             <StatusBadge status={item.status} />
             <div className="min-w-0">
-              <p className="text-sm font-medium text-slate-900 truncate">
+              <p className="text-sm font-medium text-txt-strong truncate">
                 {item.originalFilename}
               </p>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-txt-faint">
                 {formatOperationType(item.operationType)}
                 {item.targetFormat && ` → ${item.targetFormat.toUpperCase()}`}
                 {' · '}
@@ -98,7 +98,7 @@ export function HistoryTable({ items, onDelete, isDeleting }: Props) {
           </div>
 
           {/* Размеры */}
-          <div className="text-xs text-slate-500 flex-shrink-0 sm:text-right">
+          <div className="text-xs text-txt-muted flex-shrink-0 sm:text-right">
             <span>{formatFileSize(item.fileSizeBefore)}</span>
             {item.fileSizeAfter != null && (
               <>
@@ -126,7 +126,7 @@ export function HistoryTable({ items, onDelete, isDeleting }: Props) {
 
             <button
               onClick={() => handleRepeat(item.id)}
-              className="text-xs text-slate-500 hover:text-slate-700"
+              className="text-xs text-txt-muted hover:text-txt-base"
               title="Повторить операцию"
             >
               🔄
@@ -135,7 +135,7 @@ export function HistoryTable({ items, onDelete, isDeleting }: Props) {
             <button
               onClick={() => onDelete(item.id)}
               disabled={isDeleting === item.id}
-              className="text-xs text-red-500 hover:text-red-700 disabled:opacity-50"
+              className="text-xs text-error hover:text-error-text disabled:opacity-50"
               title="Удалить из истории"
             >
               {isDeleting === item.id ? '...' : '✕'}
@@ -168,3 +168,4 @@ function formatOperationType(type: string): string {
   };
   return map[type] || type;
 }
+

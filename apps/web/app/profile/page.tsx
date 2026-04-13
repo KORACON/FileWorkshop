@@ -39,7 +39,7 @@ export default function ProfilePage() {
       {/* Последние операции */}
       <div className="card">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-slate-900">Последние операции</h3>
+          <h3 className="font-semibold text-txt-strong">Последние операции</h3>
           <Link href="/profile/history" className="text-sm text-primary-600 hover:text-primary-500">
             Вся история →
           </Link>
@@ -57,20 +57,20 @@ export default function ProfilePage() {
         ) : (
           <div className="space-y-2">
             {data.items.map((item) => (
-              <div key={item.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+              <div key={item.id} className="flex items-center gap-3 p-3 bg-bg-soft rounded-lg">
                 <StatusBadge status={item.status} />
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-slate-900 truncate">
+                  <p className="text-sm font-medium text-txt-strong truncate">
                     {item.originalFilename}
                   </p>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-txt-faint">
                     {formatOp(item.operationType)}
                     {item.targetFormat && ` → ${item.targetFormat.toUpperCase()}`}
                     {' · '}{formatDate(item.createdAt)}
                   </p>
                 </div>
                 {item.fileSizeAfter && (
-                  <div className="text-xs text-slate-500 text-right flex-shrink-0">
+                  <div className="text-xs text-txt-muted text-right flex-shrink-0">
                     <span>{formatFileSize(item.fileSizeBefore)}</span>
                     <span className="mx-1">→</span>
                     <span>{formatFileSize(item.fileSizeAfter)}</span>
@@ -87,3 +87,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+

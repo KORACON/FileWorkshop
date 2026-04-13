@@ -23,13 +23,14 @@ export function ProfileCard() {
 
       <div className="min-w-0">
         {user.name && (
-          <h2 className="text-lg font-semibold text-slate-900 truncate">{user.name}</h2>
+          <h2 className="text-lg font-semibold text-txt-strong truncate">{user.name}</h2>
         )}
-        <p className="text-sm text-slate-500 truncate">{user.email}</p>
-        <p className="text-xs text-slate-400 mt-1">
+        <p className="text-sm text-txt-muted truncate">{user.email}</p>
+        <p className="text-xs text-txt-faint mt-1">
           Зарегистрирован {formatDate(user.createdAt || new Date().toISOString())}
         </p>
       </div>
     </div>
   );
 }
+

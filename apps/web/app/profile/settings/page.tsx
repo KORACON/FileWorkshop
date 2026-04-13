@@ -35,29 +35,29 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold text-slate-900">Настройки</h1>
+      <h1 className="text-xl font-bold text-txt-strong">Настройки</h1>
 
       {/* Профиль */}
       <div className="card">
-        <h3 className="font-semibold text-slate-900 mb-4">Личные данные</h3>
+        <h3 className="font-semibold text-txt-strong mb-4">Личные данные</h3>
 
         {profileSuccess && (
-          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-700">
+          <div className="mb-4 p-3 bg-success-light border border-success/20 rounded-lg text-sm text-green-700">
             Данные обновлены
           </div>
         )}
 
         <form onSubmit={handleSubmit(onUpdateProfile)} className="space-y-4 max-w-md">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
-            <input type="email" value={user?.email || ''} disabled className="input-field bg-slate-50 text-slate-500" />
-            <p className="mt-1 text-xs text-slate-400">Email нельзя изменить</p>
+            <label className="block text-sm font-medium text-txt-base mb-1">Email</label>
+            <input type="email" value={user?.email || ''} disabled className="input-field bg-bg-soft text-txt-muted" />
+            <p className="mt-1 text-xs text-txt-faint">Email нельзя изменить</p>
           </div>
 
           <div>
-            <label htmlFor="settings-name" className="block text-sm font-medium text-slate-700 mb-1">Имя</label>
+            <label htmlFor="settings-name" className="block text-sm font-medium text-txt-base mb-1">Имя</label>
             <input id="settings-name" type="text" className="input-field" placeholder="Как вас зовут" {...register('name')} />
-            {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>}
+            {errors.name && <p className="mt-1 text-sm text-error">{errors.name.message}</p>}
           </div>
 
           <button type="submit" disabled={isSubmitting} className="btn-primary">
@@ -71,3 +71,4 @@ export default function SettingsPage() {
     </div>
   );
 }
+

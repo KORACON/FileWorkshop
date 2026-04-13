@@ -19,19 +19,19 @@ export function FilePreview({ file, onRemove }: Props) {
   const icon = FORMAT_ICONS[ext] || '📎';
 
   return (
-    <div className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-lg">
+    <div className="flex items-center gap-3 p-3 bg-bg-soft border border-border rounded-lg">
       <span className="text-2xl flex-shrink-0">{icon}</span>
 
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium text-slate-900 truncate">{file.name}</p>
-        <p className="text-xs text-slate-400">
+        <p className="text-sm font-medium text-txt-strong truncate">{file.name}</p>
+        <p className="text-xs text-txt-faint">
           {ext.toUpperCase()} · {formatFileSize(file.size)}
         </p>
       </div>
 
       <button
         onClick={onRemove}
-        className="text-slate-400 hover:text-red-500 transition-colors flex-shrink-0 p-1"
+        className="text-txt-faint hover:text-error transition-colors flex-shrink-0 p-1"
         aria-label="Удалить файл"
       >
         ✕
@@ -39,3 +39,4 @@ export function FilePreview({ file, onRemove }: Props) {
     </div>
   );
 }
+

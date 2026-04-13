@@ -23,8 +23,8 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-8">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 w-48 bg-slate-200 rounded" />
-          <div className="h-64 bg-slate-100 rounded-xl" />
+          <div className="h-8 w-48 skeleton rounded" />
+          <div className="h-64 bg-bg-soft rounded-xl" />
         </div>
       </div>
     );
@@ -34,3 +34,4 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
   return <>{children}</>;
 }
+

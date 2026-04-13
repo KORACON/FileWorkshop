@@ -22,11 +22,11 @@ export function OperationForm({ options, values, onChange }: Props) {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-sm font-medium text-slate-700">Параметры</h3>
+      <h3 className="text-sm font-medium text-txt-base">Параметры</h3>
 
       {options.map((opt) => (
         <div key={opt.key}>
-          <label className="block text-sm text-slate-600 mb-1">
+          <label className="block text-sm text-txt-base mb-1">
             {opt.label.ru}
           </label>
 
@@ -41,7 +41,7 @@ export function OperationForm({ options, values, onChange }: Props) {
                 onChange={(e) => update(opt.key, e.target.value)}
                 className="flex-1 accent-primary-600"
               />
-              <span className="text-sm font-medium text-slate-700 w-10 text-right">
+              <span className="text-sm font-medium text-txt-base w-10 text-right">
                 {values[opt.key] || opt.default}
               </span>
             </div>
@@ -94,10 +94,11 @@ export function OperationForm({ options, values, onChange }: Props) {
           )}
 
           {opt.helpText && (
-            <p className="mt-1 text-xs text-slate-400">{opt.helpText.ru}</p>
+            <p className="mt-1 text-xs text-txt-faint">{opt.helpText.ru}</p>
           )}
         </div>
       ))}
     </div>
   );
 }
+

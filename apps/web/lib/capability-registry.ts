@@ -20,7 +20,7 @@
 
 export type FileFamily = 'image' | 'pdf' | 'document' | 'archive' | 'other';
 
-export type ActionGroup = 'special' | 'process' | 'convert';
+export type ActionGroup = 'quick' | 'convert' | 'edit' | 'optimize' | 'extra';
 
 /** Какой UI-panel рендерить для этого действия */
 export type UiPanel = 'resize' | 'remove-bg' | 'generic' | 'instant';
@@ -148,7 +148,7 @@ const ACTIONS: CapabilityAction[] = [
   // ─── Images: Special ───
   {
     id: 'remove-bg', name: 'Убрать фон', description: 'Удалить задний фон с изображения',
-    icon: '✨', group: 'special', operationType: 'image.remove_bg', targetFormat: 'png',
+    icon: '✨', group: 'quick', operationType: 'image.remove_bg', targetFormat: 'png',
     uiPanel: 'remove-bg', fileFamily: 'image',
     options: [{ key: 'threshold', type: 'slider', label: 'Чувствительность', defaultValue: '50', min: 1, max: 100 }],
   },
@@ -156,30 +156,30 @@ const ACTIONS: CapabilityAction[] = [
   // ─── Images: Process ───
   {
     id: 'resize', name: 'Изменить размер', description: 'Изменить ширину и высоту',
-    icon: '📐', group: 'process', operationType: 'image.resize',
+    icon: '📐', group: 'edit', operationType: 'image.resize',
     uiPanel: 'resize', fileFamily: 'image', options: [],
   },
   {
     id: 'compress', name: 'Сжать', description: 'Уменьшить размер файла',
-    icon: '🗜', group: 'process', operationType: 'image.compress',
+    icon: '🗜', group: 'edit', operationType: 'image.compress',
     uiPanel: 'generic', fileFamily: 'image',
     options: [{ key: 'quality', type: 'slider', label: 'Качество', defaultValue: '75', min: 1, max: 100 }],
   },
   {
     id: 'rotate', name: 'Повернуть', description: 'Повернуть на 90°, 180°, 270°',
-    icon: '🔄', group: 'process', operationType: 'image.rotate',
+    icon: '🔄', group: 'edit', operationType: 'image.rotate',
     uiPanel: 'generic', fileFamily: 'image',
     options: [{ key: 'rotation', type: 'select', label: 'Угол', defaultValue: '90',
       choices: [{ value: '90', label: '90°' }, { value: '180', label: '180°' }, { value: '270', label: '270°' }] }],
   },
   {
     id: 'remove-exif', name: 'Удалить метаданные', description: 'Убрать EXIF, GPS, камеру',
-    icon: '🧹', group: 'process', operationType: 'image.remove_exif',
+    icon: '🧹', group: 'extra', operationType: 'image.remove_exif',
     uiPanel: 'instant', fileFamily: 'image', options: [],
   },
   {
     id: 'crop', name: 'Обрезать', description: 'Обрезать края изображения',
-    icon: '✂️', group: 'process', operationType: 'image.crop',
+    icon: '✂️', group: 'edit', operationType: 'image.crop',
     uiPanel: 'generic', fileFamily: 'image',
     options: [
       { key: 'left', type: 'number', label: 'Слева (px)', defaultValue: '0', min: 0 },
@@ -208,19 +208,19 @@ const ACTIONS: CapabilityAction[] = [
 
   // ─── PDF: Process ───
   { id: 'pdf-compress', name: 'Сжать PDF', description: 'Уменьшить размер файла', icon: '🗜',
-    group: 'process', operationType: 'pdf.compress', uiPanel: 'generic', fileFamily: 'pdf',
+    group: 'optimize', operationType: 'pdf.compress', uiPanel: 'generic', fileFamily: 'pdf',
     options: [{ key: 'quality', type: 'select', label: 'Качество', defaultValue: 'ebook',
       choices: [{ value: 'screen', label: 'Минимальный (72 dpi)' }, { value: 'ebook', label: 'Баланс (150 dpi)' }, { value: 'printer', label: 'Печать (300 dpi)' }] }] },
   { id: 'pdf-split', name: 'Разделить', description: 'Разбить на отдельные страницы', icon: '✂️',
-    group: 'process', operationType: 'pdf.split', uiPanel: 'instant', fileFamily: 'pdf', options: [] },
+    group: 'edit', operationType: 'pdf.split', uiPanel: 'instant', fileFamily: 'pdf', options: [] },
   { id: 'pdf-rotate', name: 'Повернуть страницы', description: 'Повернуть все страницы', icon: '🔄',
-    group: 'process', operationType: 'pdf.rotate', uiPanel: 'generic', fileFamily: 'pdf',
+    group: 'edit', operationType: 'pdf.rotate', uiPanel: 'generic', fileFamily: 'pdf',
     options: [{ key: 'rotation', type: 'select', label: 'Угол', defaultValue: '90',
       choices: [{ value: '90', label: '90°' }, { value: '180', label: '180°' }, { value: '270', label: '270°' }] }] },
   { id: 'pdf-remove-meta', name: 'Удалить метаданные', description: 'Очистить автора, заголовок', icon: '🧹',
-    group: 'process', operationType: 'pdf.remove_metadata', uiPanel: 'instant', fileFamily: 'pdf', options: [] },
+    group: 'extra', operationType: 'pdf.remove_metadata', uiPanel: 'instant', fileFamily: 'pdf', options: [] },
   { id: 'pdf-extract', name: 'Извлечь страницы', description: 'Выбрать нужные страницы', icon: '📑',
-    group: 'process', operationType: 'pdf.extract_pages', uiPanel: 'generic', fileFamily: 'pdf',
+    group: 'extra', operationType: 'pdf.extract_pages', uiPanel: 'generic', fileFamily: 'pdf',
     options: [{ key: 'pages', type: 'number', label: 'Страницы (1,3,5-7)', defaultValue: '' }] },
 
   // ─── PDF: Convert ───
@@ -339,15 +339,19 @@ export function getActionsForFile(filename: string, mimeType?: string): Capabili
  * Возвращает действия, сгруппированные для burger menu.
  */
 export function getGroupedActions(filename: string, mimeType?: string): {
-  special: CapabilityAction[];
-  process: CapabilityAction[];
+  quick: CapabilityAction[];
   convert: CapabilityAction[];
+  edit: CapabilityAction[];
+  optimize: CapabilityAction[];
+  extra: CapabilityAction[];
 } {
   const actions = getActionsForFile(filename, mimeType);
   return {
-    special: actions.filter((a) => a.group === 'special'),
-    process: actions.filter((a) => a.group === 'process'),
+    quick: actions.filter((a) => a.group === 'quick'),
     convert: actions.filter((a) => a.group === 'convert'),
+    edit: actions.filter((a) => a.group === 'edit'),
+    optimize: actions.filter((a) => a.group === 'optimize'),
+    extra: actions.filter((a) => a.group === 'extra'),
   };
 }
 
@@ -382,3 +386,6 @@ export function getAllSupportedExtensions(): string[] {
 export function getFamilyMeta(family: FileFamily): { label: string; icon: string } {
   return FAMILY_META[family];
 }
+
+
+

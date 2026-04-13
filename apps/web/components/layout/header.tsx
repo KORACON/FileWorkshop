@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useAuthStore } from '@/stores/auth-store';
+import { ProfileDropdown } from './profile-dropdown';
 
 export function Header() {
   const { isAuthenticated, user, logout, isLoading } = useAuthStore();
@@ -30,17 +31,13 @@ export function Header() {
           {/* Auth */}
           <div className="flex items-center gap-2">
             {isLoading ? (
-              <div className="h-8 w-20 bg-bg-soft rounded-button animate-pulse" />
-            ) : isAuthenticated ? (
-              <>
-                <Link href="/profile" className="btn-ghost">
-                  <span className="w-6 h-6 bg-primary-100 text-primary rounded-full flex items-center justify-center text-micro font-bold mr-1.5">
-                    {(user?.name || user?.email || '?')[0].toUpperCase()}
-                  </span>
-                  {user?.name || user?.email?.split('@')[0]}
-                </Link>
-                <button onClick={logout} className="btn-ghost text-txt-faint">Выйти</button>
-              </>
+              <div className="h-8 w-20 skeleton rounded-button" />
+            ) : isAuthenticated && user ? (
+              <ProfileDropdown
+                name={user.name || null}
+                email={user.email}
+                onLogout={logout}
+              />
             ) : (
               <>
                 <Link href="/login" className="btn-ghost">Войти</Link>

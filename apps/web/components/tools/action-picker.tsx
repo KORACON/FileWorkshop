@@ -17,7 +17,7 @@ export function ActionPicker({ tools, fileCategory, onSelect }: Props) {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <p className="text-sm text-slate-500">Что сделать с файлом?</p>
+        <p className="text-sm text-txt-muted">Что сделать с файлом?</p>
       </div>
 
       {/* Специальные (убрать фон и т.д.) — показываем первыми, крупно */}
@@ -46,20 +46,20 @@ export function ActionPicker({ tools, fileCategory, onSelect }: Props) {
       {/* Конвертации */}
       {conversions.length > 0 && (
         <div>
-          <h3 className="text-sm font-medium text-slate-500 mb-3">Конвертировать в</h3>
+          <h3 className="text-sm font-medium text-txt-muted mb-3">Конвертировать в</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {conversions.map((tool) => (
               <button
                 key={tool.id}
                 onClick={() => onSelect(tool)}
-                className="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:border-primary-400 hover:bg-primary-50 transition-all text-left group"
+                className="flex items-center gap-3 p-3 rounded-xl border border-border hover:border-primary-400 hover:bg-primary-50 transition-all text-left group"
               >
                 <span className="text-2xl">{tool.icon}</span>
                 <div>
-                  <p className="text-sm font-medium text-slate-800 group-hover:text-primary-700">
+                  <p className="text-sm font-medium text-txt-strong group-hover:text-primary-700">
                     {tool.targetFormat?.toUpperCase()}
                   </p>
-                  <p className="text-xs text-slate-400">{tool.name.ru}</p>
+                  <p className="text-xs text-txt-faint">{tool.name.ru}</p>
                 </div>
               </button>
             ))}
@@ -70,20 +70,20 @@ export function ActionPicker({ tools, fileCategory, onSelect }: Props) {
       {/* Операции (resize, compress, rotate и т.д.) */}
       {operations.length > 0 && (
         <div>
-          <h3 className="text-sm font-medium text-slate-500 mb-3">Обработать</h3>
+          <h3 className="text-sm font-medium text-txt-muted mb-3">Обработать</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {operations.map((tool) => (
               <button
                 key={tool.id}
                 onClick={() => onSelect(tool)}
-                className="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:border-primary-400 hover:bg-primary-50 transition-all text-left group"
+                className="flex items-center gap-3 p-3 rounded-xl border border-border hover:border-primary-400 hover:bg-primary-50 transition-all text-left group"
               >
                 <span className="text-2xl">{tool.icon}</span>
                 <div>
-                  <p className="text-sm font-medium text-slate-800 group-hover:text-primary-700">
+                  <p className="text-sm font-medium text-txt-strong group-hover:text-primary-700">
                     {tool.name.ru}
                   </p>
-                  <p className="text-xs text-slate-400">{tool.description.ru}</p>
+                  <p className="text-xs text-txt-faint">{tool.description.ru}</p>
                 </div>
               </button>
             ))}
@@ -93,9 +93,10 @@ export function ActionPicker({ tools, fileCategory, onSelect }: Props) {
 
       {tools.length === 0 && (
         <div className="text-center py-8">
-          <p className="text-slate-400">Для этого типа файла пока нет доступных операций</p>
+          <p className="text-txt-faint">Для этого типа файла пока нет доступных операций</p>
         </div>
       )}
     </div>
   );
 }
+

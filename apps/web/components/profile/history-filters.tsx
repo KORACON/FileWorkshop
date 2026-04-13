@@ -64,7 +64,7 @@ export function HistoryFiltersBar({ filters, onChange }: Props) {
       {(filters.status || filters.operationType || filters.dateFrom || filters.dateTo) && (
         <button
           onClick={() => onChange({ page: 1, limit: 20 })}
-          className="text-sm text-slate-500 hover:text-slate-700"
+          className="text-sm text-txt-muted hover:text-txt-base"
         >
           Сбросить
         </button>
@@ -72,3 +72,4 @@ export function HistoryFiltersBar({ filters, onChange }: Props) {
     </div>
   );
 }
+

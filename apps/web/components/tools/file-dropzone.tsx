@@ -98,21 +98,22 @@ export function FileDropzone({ tool, onFileSelect, disabled }: Props) {
         />
 
         <div className="text-4xl mb-3">{isDragOver ? '📥' : '📁'}</div>
-        <p className="text-sm font-medium text-slate-700">
+        <p className="text-sm font-medium text-txt-base">
           {isDragOver ? 'Отпустите файл' : 'Перетащите файл сюда'}
         </p>
-        <p className="text-xs text-slate-400 mt-1">
+        <p className="text-xs text-txt-faint mt-1">
           или нажмите для выбора
         </p>
-        <p className="text-xs text-slate-400 mt-2">
+        <p className="text-xs text-txt-faint mt-2">
           {formatsStr} · до {maxSizeMB} МБ
           {tool.multiFile && ' · несколько файлов'}
         </p>
       </div>
 
       {validationError && (
-        <p className="mt-2 text-sm text-red-600">{validationError}</p>
+        <p className="mt-2 text-sm text-error">{validationError}</p>
       )}
     </div>
   );
 }
+

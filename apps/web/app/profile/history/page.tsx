@@ -19,19 +19,19 @@ export default function HistoryPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold text-slate-900">История операций</h1>
+        <h1 className="text-xl font-bold text-txt-strong">История операций</h1>
         {meta.total > 0 && (
           <div className="relative">
             <button
               onClick={() => setShowClearConfirm(true)}
-              className="text-sm text-red-500 hover:text-red-700"
+              className="text-sm text-error hover:text-error-text"
             >
               Очистить всё
             </button>
 
             {showClearConfirm && (
-              <div className="absolute right-0 top-8 z-10 bg-white border border-slate-200 rounded-lg shadow-lg p-4 w-64">
-                <p className="text-sm text-slate-700 mb-3">
+              <div className="absolute right-0 top-8 z-10 bg-surface border border-border rounded-lg shadow-lg p-4 w-64">
+                <p className="text-sm text-txt-base mb-3">
                   Удалить всю историю? Это действие нельзя отменить.
                 </p>
                 <div className="flex gap-2">
@@ -67,7 +67,7 @@ export default function HistoryPage() {
         />
       ) : (
         <>
-          <div className="text-sm text-slate-400">
+          <div className="text-sm text-txt-faint">
             {meta.total > 0 ? `Найдено: ${meta.total}` : ''}
           </div>
 
@@ -87,3 +87,4 @@ export default function HistoryPage() {
     </div>
   );
 }
+

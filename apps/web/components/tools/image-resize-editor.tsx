@@ -213,7 +213,7 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
                 key={pos}
                 onMouseDown={(e) => onHandleMouseDown(pos, e)}
                 className={cn(
-                  'absolute w-[10px] h-[10px] rounded-full bg-white border-2 border-primary-500 z-10',
+                  'absolute w-[10px] h-[10px] rounded-full bg-surface border-2 border-primary-500 z-10',
                   'hover:bg-primary-100 hover:scale-125 transition-transform',
                   dragging === pos && 'bg-primary-200 scale-125',
                 )}
@@ -222,7 +222,7 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
             ))}
 
             {/* Size label on image */}
-            <div className="absolute -bottom-7 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs px-2 py-0.5 rounded-full whitespace-nowrap">
+            <div className="absolute -bottom-7 left-1/2 -translate-x-1/2 bg-txt-strong text-white text-xs px-2 py-0.5 rounded-full whitespace-nowrap">
               {width} × {height} px
             </div>
           </div>
@@ -230,20 +230,20 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
       </div>
 
       {/* ── Controls panel ── */}
-      <div className="bg-white border border-slate-200 rounded-xl p-5 space-y-4 max-w-[700px] mx-auto">
+      <div className="bg-surface border border-border rounded-xl p-5 space-y-4 max-w-[700px] mx-auto">
         {/* Size inputs row */}
         <div className="flex items-end gap-3 justify-center">
           <div>
-            <label className="block text-xs font-medium text-slate-500 mb-1">Ширина</label>
+            <label className="block text-xs font-medium text-txt-muted mb-1">Ширина</label>
             <div className="flex items-center">
               <input
                 type="number"
                 value={width || ''}
                 onChange={(e) => setW(parseInt(e.target.value) || 0)}
-                className="w-24 px-3 py-2 border border-slate-300 rounded-lg text-center text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-24 px-3 py-2 border border-border rounded-lg text-center text-sm focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary"
                 min={1} max={16384}
               />
-              <span className="ml-1 text-xs text-slate-400">px</span>
+              <span className="ml-1 text-xs text-txt-faint">px</span>
             </div>
           </div>
 
@@ -253,7 +253,7 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
               'mb-1 p-2 rounded-lg border-2 transition-all',
               lockRatio
                 ? 'border-primary-400 bg-primary-50 text-primary-600'
-                : 'border-slate-200 text-slate-400 hover:border-slate-300',
+                : 'border-border text-txt-faint hover:border-border',
             )}
             title={lockRatio ? 'Пропорции зафиксированы' : 'Свободное изменение'}
           >
@@ -273,20 +273,20 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
           </button>
 
           <div>
-            <label className="block text-xs font-medium text-slate-500 mb-1">Высота</label>
+            <label className="block text-xs font-medium text-txt-muted mb-1">Высота</label>
             <div className="flex items-center">
               <input
                 type="number"
                 value={height || ''}
                 onChange={(e) => setH(parseInt(e.target.value) || 0)}
-                className="w-24 px-3 py-2 border border-slate-300 rounded-lg text-center text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-24 px-3 py-2 border border-border rounded-lg text-center text-sm focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary"
                 min={1} max={16384}
               />
-              <span className="ml-1 text-xs text-slate-400">px</span>
+              <span className="ml-1 text-xs text-txt-faint">px</span>
             </div>
           </div>
 
-          <div className="text-xs text-slate-400 mb-2 ml-2">
+          <div className="text-xs text-txt-faint mb-2 ml-2">
             {scalePercent}%
           </div>
         </div>
@@ -301,7 +301,7 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
                 'px-3 py-1.5 text-xs rounded-lg border transition-all',
                 scalePercent === p
                   ? 'bg-primary-600 border-primary-600 text-white'
-                  : 'border-slate-200 text-slate-600 hover:border-primary-400 hover:text-primary-600',
+                  : 'border-border text-txt-base hover:border-primary-400 hover:text-primary-600',
               )}
             >
               {p}%
@@ -310,7 +310,7 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
         </div>
 
         {/* Original size info */}
-        <div className="text-center text-xs text-slate-400">
+        <div className="text-center text-xs text-txt-faint">
           Оригинал: {origW} × {origH} px
         </div>
 
@@ -325,7 +325,7 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
           </button>
           <button
             onClick={onCancel}
-            className="bg-slate-100 text-slate-600 px-6 py-2.5 rounded-xl font-medium hover:bg-slate-200 transition-colors"
+            className="bg-bg-soft text-txt-base px-6 py-2.5 rounded-xl font-medium hover:bg-bg-soft transition-colors"
           >
             Назад
           </button>
@@ -334,3 +334,4 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
     </div>
   );
 }
+

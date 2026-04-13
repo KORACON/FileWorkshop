@@ -18,14 +18,14 @@ export function Pagination({ page, totalPages, onPageChange }: Props) {
       <button
         onClick={() => onPageChange(page - 1)}
         disabled={page <= 1}
-        className="px-3 py-1.5 text-sm text-slate-500 hover:text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed"
+        className="px-3 py-1.5 text-sm text-txt-muted hover:text-txt-base disabled:opacity-30 disabled:cursor-not-allowed"
       >
         ←
       </button>
 
       {pages.map((p, i) =>
         p === '...' ? (
-          <span key={`dots-${i}`} className="px-2 text-slate-400">…</span>
+          <span key={`dots-${i}`} className="px-2 text-txt-faint">…</span>
         ) : (
           <button
             key={p}
@@ -34,7 +34,7 @@ export function Pagination({ page, totalPages, onPageChange }: Props) {
               'px-3 py-1.5 text-sm rounded-lg transition-colors',
               p === page
                 ? 'bg-primary-600 text-white'
-                : 'text-slate-600 hover:bg-slate-100',
+                : 'text-txt-base hover:bg-bg-soft',
             )}
           >
             {p}
@@ -45,7 +45,7 @@ export function Pagination({ page, totalPages, onPageChange }: Props) {
       <button
         onClick={() => onPageChange(page + 1)}
         disabled={page >= totalPages}
-        className="px-3 py-1.5 text-sm text-slate-500 hover:text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed"
+        className="px-3 py-1.5 text-sm text-txt-muted hover:text-txt-base disabled:opacity-30 disabled:cursor-not-allowed"
       >
         →
       </button>
@@ -70,3 +70,4 @@ function getPageNumbers(current: number, total: number): (number | '...')[] {
   pages.push(total);
   return pages;
 }
+

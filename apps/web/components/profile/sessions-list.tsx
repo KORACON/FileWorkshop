@@ -29,9 +29,9 @@ export function SessionsList() {
   return (
     <div className="card">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-slate-900">Активные сессии</h3>
+        <h3 className="font-semibold text-txt-strong">Активные сессии</h3>
         {sessions && sessions.length > 1 && (
-          <button onClick={revokeAll} className="text-sm text-red-500 hover:text-red-700">
+          <button onClick={revokeAll} className="text-sm text-error hover:text-error-text">
             Завершить все остальные
           </button>
         )}
@@ -40,30 +40,30 @@ export function SessionsList() {
       {isLoading ? (
         <div className="space-y-3">
           {[...Array(2)].map((_, i) => (
-            <div key={i} className="h-12 bg-slate-50 rounded-lg animate-pulse" />
+            <div key={i} className="h-12 bg-bg-soft rounded-lg animate-pulse" />
           ))}
         </div>
       ) : !sessions?.length ? (
-        <p className="text-sm text-slate-400">Нет активных сессий</p>
+        <p className="text-sm text-txt-faint">Нет активных сессий</p>
       ) : (
         <div className="space-y-2">
           {sessions.map((session, idx) => (
-            <div key={session.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+            <div key={session.id} className="flex items-center justify-between p-3 bg-bg-soft rounded-lg">
               <div>
-                <p className="text-sm text-slate-700">
+                <p className="text-sm text-txt-base">
                   {parseUserAgent(session.userAgent)}
                   {idx === 0 && (
-                    <span className="ml-2 text-xs text-green-600 font-medium">Текущая</span>
+                    <span className="ml-2 text-xs text-success font-medium">Текущая</span>
                   )}
                 </p>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-txt-faint">
                   IP: {session.ipAddress || '—'} · {formatDate(session.createdAt)}
                 </p>
               </div>
               {idx !== 0 && (
                 <button
                   onClick={() => revokeSession(session.id)}
-                  className="text-xs text-red-500 hover:text-red-700"
+                  className="text-xs text-error hover:text-error-text"
                 >
                   Завершить
                 </button>
@@ -84,3 +84,4 @@ function parseUserAgent(ua: string | null): string {
   if (ua.includes('Edge')) return 'Edge';
   return ua.substring(0, 50);
 }
+

@@ -29,7 +29,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
                     'flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors',
                     pathname === item.href
                       ? 'bg-primary-50 text-primary-700 font-medium'
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900',
+                      : 'text-txt-base hover:bg-bg-soft hover:text-txt-strong',
                   )}
                 >
                   <span>{item.icon}</span>
@@ -48,3 +48,4 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
     </AuthGuard>
   );
 }
+

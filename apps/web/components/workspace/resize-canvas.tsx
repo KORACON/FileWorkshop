@@ -146,7 +146,7 @@ export function ResizeCanvas({ imageUrl, width, height, onDrag }: Props) {
             key={h}
             onMouseDown={(e) => onMouseDown(h, e)}
             className={cn(
-              'absolute z-10 rounded-full bg-white border-2 border-primary-500',
+              'absolute z-10 rounded-full bg-surface border-2 border-primary-500',
               'hover:bg-primary-100 hover:scale-110 active:scale-125',
               'transition-transform duration-75',
               dragging === h && 'bg-primary-200 scale-125',
@@ -161,10 +161,11 @@ export function ResizeCanvas({ imageUrl, width, height, onDrag }: Props) {
         ))}
 
         {/* Size label */}
-        <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-slate-800/90 text-white text-xs px-2.5 py-1 rounded-full whitespace-nowrap font-mono">
+        <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-txt-strong/90 text-white text-xs px-2.5 py-1 rounded-full whitespace-nowrap font-mono">
           {width} × {height}
         </div>
       </div>
     </div>
   );
 }
+

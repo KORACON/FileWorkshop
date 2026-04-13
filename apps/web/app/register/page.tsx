@@ -50,36 +50,36 @@ export default function RegisterPage() {
           <h1 className="text-2xl font-bold text-center mb-6">Регистрация</h1>
 
           {serverError && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+            <div className="mb-4 p-3 bg-error-light border border-error/20 rounded-lg text-sm text-error-text">
               {serverError}
             </div>
           )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">
-                Имя <span className="text-slate-400">(необязательно)</span>
+              <label htmlFor="name" className="block text-sm font-medium text-txt-base mb-1">
+                Имя <span className="text-txt-faint">(необязательно)</span>
               </label>
               <input id="name" type="text" autoComplete="name" className="input-field" placeholder="Как вас зовут" {...register('name')} />
             </div>
 
             <div>
-              <label htmlFor="reg-email" className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+              <label htmlFor="reg-email" className="block text-sm font-medium text-txt-base mb-1">Email</label>
               <input id="reg-email" type="email" autoComplete="email" className="input-field" placeholder="you@example.com" {...register('email')} />
-              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
+              {errors.email && <p className="mt-1 text-sm text-error">{errors.email.message}</p>}
             </div>
 
             <div>
-              <label htmlFor="reg-password" className="block text-sm font-medium text-slate-700 mb-1">Пароль</label>
+              <label htmlFor="reg-password" className="block text-sm font-medium text-txt-base mb-1">Пароль</label>
               <input id="reg-password" type="password" autoComplete="new-password" className="input-field" {...register('password')} />
-              {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
-              <p className="mt-1 text-xs text-slate-400">Минимум 8 символов, строчная и заглавная буква, цифра</p>
+              {errors.password && <p className="mt-1 text-sm text-error">{errors.password.message}</p>}
+              <p className="mt-1 text-xs text-txt-faint">Минимум 8 символов, строчная и заглавная буква, цифра</p>
             </div>
 
             <div>
-              <label htmlFor="confirm-password" className="block text-sm font-medium text-slate-700 mb-1">Подтверждение пароля</label>
+              <label htmlFor="confirm-password" className="block text-sm font-medium text-txt-base mb-1">Подтверждение пароля</label>
               <input id="confirm-password" type="password" autoComplete="new-password" className="input-field" {...register('confirmPassword')} />
-              {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>}
+              {errors.confirmPassword && <p className="mt-1 text-sm text-error">{errors.confirmPassword.message}</p>}
             </div>
 
             <button type="submit" disabled={isSubmitting} className="btn-primary w-full flex items-center justify-center gap-2">
@@ -88,7 +88,7 @@ export default function RegisterPage() {
             </button>
           </form>
 
-          <p className="mt-4 text-center text-sm text-slate-500">
+          <p className="mt-4 text-center text-sm text-txt-muted">
             Уже есть аккаунт?{' '}
             <Link href="/login" className="text-primary-600 hover:text-primary-500 font-medium">Войти</Link>
           </p>
@@ -97,3 +97,4 @@ export default function RegisterPage() {
     </div>
   );
 }
+

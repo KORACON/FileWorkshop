@@ -36,15 +36,15 @@ export function RegisterForm() {
       <h1 className="text-2xl font-bold text-center mb-6">Регистрация</h1>
 
       {serverError && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+        <div className="mb-4 p-3 bg-error-light border border-error/20 rounded-lg text-sm text-error-text">
           {serverError}
         </div>
       )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">
-            Имя <span className="text-slate-400">(необязательно)</span>
+          <label htmlFor="name" className="block text-sm font-medium text-txt-base mb-1">
+            Имя <span className="text-txt-faint">(необязательно)</span>
           </label>
           <input
             id="name"
@@ -55,12 +55,12 @@ export function RegisterForm() {
             {...register('name')}
           />
           {errors.name && (
-            <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+            <p className="mt-1 text-sm text-error">{errors.name.message}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="reg-email" className="block text-sm font-medium text-slate-700 mb-1">
+          <label htmlFor="reg-email" className="block text-sm font-medium text-txt-base mb-1">
             Email
           </label>
           <input
@@ -72,12 +72,12 @@ export function RegisterForm() {
             {...register('email')}
           />
           {errors.email && (
-            <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+            <p className="mt-1 text-sm text-error">{errors.email.message}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="reg-password" className="block text-sm font-medium text-slate-700 mb-1">
+          <label htmlFor="reg-password" className="block text-sm font-medium text-txt-base mb-1">
             Пароль
           </label>
           <input
@@ -88,15 +88,15 @@ export function RegisterForm() {
             {...register('password')}
           />
           {errors.password && (
-            <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+            <p className="mt-1 text-sm text-error">{errors.password.message}</p>
           )}
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-txt-faint">
             Минимум 8 символов, строчная и заглавная буква, цифра
           </p>
         </div>
 
         <div>
-          <label htmlFor="confirm-password" className="block text-sm font-medium text-slate-700 mb-1">
+          <label htmlFor="confirm-password" className="block text-sm font-medium text-txt-base mb-1">
             Подтверждение пароля
           </label>
           <input
@@ -107,7 +107,7 @@ export function RegisterForm() {
             {...register('confirmPassword')}
           />
           {errors.confirmPassword && (
-            <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>
+            <p className="mt-1 text-sm text-error">{errors.confirmPassword.message}</p>
           )}
         </div>
 
@@ -123,7 +123,7 @@ export function RegisterForm() {
         </button>
       </form>
 
-      <p className="mt-4 text-center text-sm text-slate-500">
+      <p className="mt-4 text-center text-sm text-txt-muted">
         Уже есть аккаунт?{' '}
         <Link href="/auth/login" className="text-primary-600 hover:text-primary-500 font-medium">
           Войти
@@ -132,3 +132,4 @@ export function RegisterForm() {
     </div>
   );
 }
+

@@ -46,28 +46,28 @@ export function BatchUploader({ tool, files, onFilesChange }: Props) {
       {files.length > 0 && (
         <div className="space-y-2">
           {files.map((file, i) => (
-            <div key={`${file.name}-${i}`} className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg">
-              <span className="text-xs text-slate-400 w-6 text-center">{i + 1}</span>
-              <span className="text-sm text-slate-700 truncate flex-1">{file.name}</span>
-              <span className="text-xs text-slate-400">{formatFileSize(file.size)}</span>
+            <div key={`${file.name}-${i}`} className="flex items-center gap-2 p-2 bg-bg-soft rounded-lg">
+              <span className="text-xs text-txt-faint w-6 text-center">{i + 1}</span>
+              <span className="text-sm text-txt-base truncate flex-1">{file.name}</span>
+              <span className="text-xs text-txt-faint">{formatFileSize(file.size)}</span>
 
               {/* Кнопки перемещения */}
               <button
                 onClick={() => i > 0 && moveFile(i, i - 1)}
                 disabled={i === 0}
-                className="text-xs text-slate-400 hover:text-slate-600 disabled:opacity-30 px-1"
+                className="text-xs text-txt-faint hover:text-txt-base disabled:opacity-30 px-1"
                 aria-label="Переместить вверх"
               >↑</button>
               <button
                 onClick={() => i < files.length - 1 && moveFile(i, i + 1)}
                 disabled={i === files.length - 1}
-                className="text-xs text-slate-400 hover:text-slate-600 disabled:opacity-30 px-1"
+                className="text-xs text-txt-faint hover:text-txt-base disabled:opacity-30 px-1"
                 aria-label="Переместить вниз"
               >↓</button>
 
               <button
                 onClick={() => removeFile(i)}
-                className="text-xs text-red-400 hover:text-red-600 px-1"
+                className="text-xs text-red-400 hover:text-error px-1"
                 aria-label="Удалить файл"
               >✕</button>
             </div>
@@ -79,7 +79,7 @@ export function BatchUploader({ tool, files, onFilesChange }: Props) {
       <div
         className={cn(
           'border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors',
-          isDragOver ? 'border-primary-500 bg-primary-50' : 'border-slate-300 hover:border-primary-400',
+          isDragOver ? 'border-primary-500 bg-primary-50' : 'border-border hover:border-primary-400',
         )}
         onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
         onDragLeave={() => setIsDragOver(false)}
@@ -101,17 +101,18 @@ export function BatchUploader({ tool, files, onFilesChange }: Props) {
         role="button"
         tabIndex={0}
       >
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-txt-muted">
           {files.length === 0 ? 'Перетащите файлы сюда' : '+ Добавить ещё файлы'}
         </p>
-        <p className="text-xs text-slate-400 mt-1">{formatsStr} · до {maxSizeMB} МБ</p>
+        <p className="text-xs text-txt-faint mt-1">{formatsStr} · до {maxSizeMB} МБ</p>
       </div>
 
       {files.length > 0 && (
-        <p className="text-xs text-slate-400">
+        <p className="text-xs text-txt-faint">
           {files.length} файлов · {formatFileSize(files.reduce((s, f) => s + f.size, 0))}
         </p>
       )}
     </div>
   );
 }
+

@@ -9,7 +9,7 @@ interface Props {
 export function ToolGrid({ tools, emptyMessage = 'Инструменты не найдены' }: Props) {
   if (tools.length === 0) {
     return (
-      <p className="text-center text-slate-400 py-12">{emptyMessage}</p>
+      <p className="text-center text-txt-faint py-12">{emptyMessage}</p>
     );
   }
 
@@ -21,3 +21,4 @@ export function ToolGrid({ tools, emptyMessage = 'Инструменты не н
     </div>
   );
 }
+

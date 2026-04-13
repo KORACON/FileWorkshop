@@ -123,7 +123,7 @@ export function ToolPageContent({ tool }: Props) {
   if (!isAuthenticated) {
     return (
       <div className="card text-center py-8">
-        <p className="text-slate-500 mb-4">Для обработки файлов необходимо войти в аккаунт</p>
+        <p className="text-txt-muted mb-4">Для обработки файлов необходимо войти в аккаунт</p>
         <div className="flex gap-3 justify-center">
           <Link href="/auth/login" className="btn-primary">Войти</Link>
           <Link href="/auth/register" className="btn-secondary">Регистрация</Link>
@@ -156,7 +156,7 @@ export function ToolPageContent({ tool }: Props) {
           />
 
           {uploadError && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+            <div className="p-3 bg-error-light border border-error/20 rounded-lg text-sm text-error-text">
               {uploadError}
             </div>
           )}
@@ -182,7 +182,7 @@ export function ToolPageContent({ tool }: Props) {
       {(pageState === 'processing' || pageState === 'done' || pageState === 'error') && (
         <>
           {selectedFiles[0] && (
-            <div className="flex items-center gap-2 text-sm text-slate-500">
+            <div className="flex items-center gap-2 text-sm text-txt-muted">
               <span>📎</span>
               <span className="truncate">{selectedFiles[0].name}</span>
             </div>
@@ -200,3 +200,4 @@ export function ToolPageContent({ tool }: Props) {
     </div>
   );
 }
+

@@ -51,7 +51,7 @@ export function WorkspaceFooter({ state, job, isUploading, onProcess, onDownload
   if (state === 'done' && job) {
     const hasSizeInfo = job.fileSizeBefore > 0 && job.fileSizeAfter != null;
     return (
-      <div className="flex items-center gap-3 px-4 py-3 bg-success-light border-t border-green-200">
+      <div className="flex items-center gap-3 px-4 py-3 bg-success-light border-t border-success/20">
         <span className="badge badge-success">✓ Готово</span>
         {hasSizeInfo && (
           <span className="text-caption text-success-text">
@@ -71,7 +71,7 @@ export function WorkspaceFooter({ state, job, isUploading, onProcess, onDownload
 
   if (state === 'error') {
     return (
-      <div className="flex items-center gap-3 px-4 py-3 bg-error-light border-t border-red-200">
+      <div className="flex items-center gap-3 px-4 py-3 bg-error-light border-t border-error/20">
         <span className="badge badge-error">Ошибка</span>
         <span className="text-caption text-error-text flex-1 truncate">{job?.errorMessage || 'Ошибка обработки'}</span>
         <button onClick={onProcess} className="btn-primary py-2">Повторить</button>
