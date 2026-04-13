@@ -1,0 +1,55 @@
+'use client';
+
+import Link from 'next/link';
+import { useAuthStore } from '@/stores/auth-store';
+
+export function Header() {
+  const { isAuthenticated, user, logout, isLoading } = useAuthStore();
+
+  return (
+    <header className="bg-surface border-b border-border sticky top-0 z-50">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-14 items-center justify-between">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 text-txt-strong font-bold text-body">
+            <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="white">
+                <path d="M3 2h7l3 3v9a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" />
+                <path d="M10 2v3h3" fill="none" stroke="white" strokeWidth="1.5" />
+              </svg>
+            </div>
+            <span>Мастерская файлов</span>
+          </Link>
+
+          {/* Nav */}
+          <nav className="hidden md:flex items-center gap-1">
+            <Link href="/tools" className="btn-ghost">Инструменты</Link>
+            <Link href="/pricing" className="btn-ghost">Тарифы</Link>
+          </nav>
+
+          {/* Auth */}
+          <div className="flex items-center gap-2">
+            {isLoading ? (
+              <div className="h-8 w-20 bg-bg-soft rounded-button animate-pulse" />
+            ) : isAuthenticated ? (
+              <>
+                <Link href="/profile" className="btn-ghost">
+                  <span className="w-6 h-6 bg-primary-100 text-primary rounded-full flex items-center justify-center text-micro font-bold mr-1.5">
+                    {(user?.name || user?.email || '?')[0].toUpperCase()}
+                  </span>
+                  {user?.name || user?.email?.split('@')[0]}
+                </Link>
+                <button onClick={logout} className="btn-ghost text-txt-faint">Выйти</button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="btn-ghost">Войти</Link>
+                <Link href="/register" className="btn-primary text-small py-2 px-4">Регистрация</Link>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}

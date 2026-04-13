@@ -1,0 +1,23 @@
+{
+  "name": "file-workshop-worker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/worker.js",
+    "dev": "ts-node src/worker.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.0.0",
+    "dotenv": "^16.4.0",
+    "sharp": "^0.33.0",
+    "pdf-lib": "^1.17.0",
+    "archiver": "^7.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "ts-node": "^10.9.0",
+    "@types/node": "^22.0.0",
+    "@types/archiver": "^6.0.0"
+  }
+}
