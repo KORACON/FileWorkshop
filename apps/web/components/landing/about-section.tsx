@@ -8,7 +8,7 @@ export function AboutSection() {
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <ScrollReveal>
           <div className="card p-8 sm:p-10 text-center">
-            <h2 className="text-h1 text-txt-strong mb-4">О программе</h2>
+            <h2 className="text-h1 font-display text-txt-strong mb-4">О программе</h2>
             <div className="space-y-3 text-body text-txt-base leading-relaxed">
               <p>
                 <span className="font-semibold text-txt-strong">«Мастерская файлов»</span> — это веб-приложение

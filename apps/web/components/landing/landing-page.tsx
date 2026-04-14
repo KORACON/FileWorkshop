@@ -23,7 +23,7 @@ export function LandingPage({ onFileSelect }: Props) {
         <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
           <FadeIn>
             <div className="text-center mb-6">
-              <h1 className="text-hero text-txt-strong mb-3">
+              <h1 className="text-hero font-display text-txt-strong mb-3">
                 Мастерская файлов
               </h1>
               <p className="text-body text-txt-muted max-w-lg mx-auto leading-relaxed">

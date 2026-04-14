@@ -15,7 +15,7 @@ export function CategoriesSection() {
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <ScrollReveal>
           <div className="text-center mb-10">
-            <h2 className="text-h1 text-txt-strong mb-2">Поддерживаемые форматы</h2>
+            <h2 className="text-h1 font-display text-txt-strong mb-2">Поддерживаемые форматы</h2>
             <p className="text-body text-txt-muted">Работайте с изображениями, PDF и документами в одном месте</p>
           </div>
         </ScrollReveal>

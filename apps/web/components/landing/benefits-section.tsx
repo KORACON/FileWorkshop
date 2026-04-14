@@ -65,7 +65,7 @@ export function BenefitsSection() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <ScrollReveal>
           <div className="text-center mb-10">
-            <h2 className="text-h1 text-txt-strong mb-2">Почему Мастерская файлов</h2>
+            <h2 className="text-h1 font-display text-txt-strong mb-2">Почему Мастерская файлов</h2>
             <p className="text-body text-txt-muted max-w-lg mx-auto">
               Один сервис вместо десятков вкладок. Понятный процесс вместо хаоса.
             </p>

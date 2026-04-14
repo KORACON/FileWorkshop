@@ -10,10 +10,10 @@
 
 @layer base {
   body {
-    @apply bg-bg text-txt-base antialiased;
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    @apply bg-bg text-txt-base antialiased font-sans;
   }
   h1, h2, h3, h4 { @apply text-txt-strong; }
+  h1 { @apply font-display; }
 }
 
 @layer components {

@@ -58,12 +58,13 @@ const config: Config = {
         info:    { DEFAULT: '#2E5B88', light: '#EDF2F9', text: '#264D74' },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Unbounded', 'system-ui', 'sans-serif'],
+        sans: ['IBM Plex Sans', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       fontSize: {
         'hero': ['2.25rem', { lineHeight: '1.2', fontWeight: '700' }],
-        'h1': ['1.5rem', { lineHeight: '1.3', fontWeight: '700' }],
+        'h1': ['1.5rem', { lineHeight: '1.3', fontWeight: '600' }],
         'h2': ['1.25rem', { lineHeight: '1.35', fontWeight: '600' }],
         'h3': ['1rem', { lineHeight: '1.4', fontWeight: '600' }],
         'body': ['0.875rem', { lineHeight: '1.5', fontWeight: '400' }],

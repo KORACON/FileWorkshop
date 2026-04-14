@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAuthStore } from '@/stores/auth-store';
 import { ProfileDropdown } from './profile-dropdown';
 
@@ -12,14 +13,9 @@ export function Header() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-14 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 text-txt-strong font-bold text-body">
-            <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="white">
-                <path d="M3 2h7l3 3v9a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" />
-                <path d="M10 2v3h3" fill="none" stroke="white" strokeWidth="1.5" />
-              </svg>
-            </div>
-            <span>Мастерская файлов</span>
+          <Link href="/" className="flex items-center gap-2.5">
+            <Image src="/logo.png" alt="Мастерская файлов" width={32} height={32} className="rounded-lg" />
+            <span className="font-display font-semibold text-txt-strong text-body">Мастерская файлов</span>
           </Link>
 
           {/* Nav */}

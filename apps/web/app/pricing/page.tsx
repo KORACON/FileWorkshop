@@ -105,7 +105,7 @@ export default function PricingPage() {
 
         {/* Header */}
         <div className="text-center mb-10">
-          <h1 className="text-hero text-txt-strong mb-3">Тарифы</h1>
+          <h1 className="text-hero font-display text-txt-strong mb-3">Тарифы</h1>
           <p className="text-body text-txt-muted max-w-lg mx-auto">
             Базовые инструменты бесплатны навсегда. Расширенные возможности — для тех, кому нужно больше.
           </p>
@@ -175,7 +175,7 @@ export default function PricingPage() {
                 {/* Price */}
                 <div className="mt-4 mb-1">
                   {price === 0 ? (
-                    <span className="text-hero text-txt-strong">0 ₽</span>
+                    <span className="text-hero font-display text-txt-strong">0 ₽</span>
                   ) : (
                     <div className="flex items-baseline gap-1">
                       <motion.span
@@ -183,7 +183,7 @@ export default function PricingPage() {
                         initial={{ opacity: 0, y: -8 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.25 }}
-                        className="text-hero text-txt-strong"
+                        className="text-hero font-display text-txt-strong"
                       >
                         {Math.round(price)} ₽
                       </motion.span>
