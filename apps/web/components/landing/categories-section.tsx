@@ -27,7 +27,7 @@ export function CategoriesSection() {
                 <div className="text-3xl mb-3">{cat.icon}</div>
                 <h3 className="text-h3 text-txt-strong mb-1">{cat.name}</h3>
                 <p className="text-small text-txt-muted mb-3">{cat.desc}</p>
-                <p className="text-caption text-accent">{cat.examples}</p>
+                <p className="text-caption text-primary">{cat.examples}</p>
               </Link>
             </ScrollReveal>
           ))}

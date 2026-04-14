@@ -99,7 +99,7 @@ export function Header() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              className="fixed inset-0 bg-txt-strong/25 backdrop-blur-sm z-[100]"
+              className="fixed inset-0 bg-bg/60 backdrop-blur-sm z-[100]"
               onClick={handleContinue}
             />
 
@@ -113,8 +113,8 @@ export function Header() {
             >
               <div className="bg-surface rounded-card border border-border shadow-dropdown w-full max-w-md p-8">
                 {/* Icon */}
-                <div className="w-14 h-14 bg-accent-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4B6382" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <div className="w-14 h-14 bg-primary-soft rounded-2xl flex items-center justify-center mx-auto mb-5">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8697AD" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
                     <polyline points="14 2 14 8 20 8" />
                   </svg>

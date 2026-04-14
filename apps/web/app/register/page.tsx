@@ -90,7 +90,7 @@ export default function RegisterPage() {
 
           <p className="mt-4 text-center text-sm text-txt-muted">
             Уже есть аккаунт?{' '}
-            <Link href="/login" className="text-accent hover:text-accent-dark font-medium">Войти</Link>
+            <Link href="/login" className="text-primary hover:text-primary-ring font-medium">Войти</Link>
           </p>
         </div>
       </div>

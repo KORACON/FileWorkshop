@@ -40,7 +40,7 @@ export default function ProfilePage() {
       <div className="card">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-txt-strong">Последние операции</h3>
-          <Link href="/profile/history" className="text-sm text-accent hover:text-accent-dark">
+          <Link href="/profile/history" className="text-sm text-primary hover:text-primary-ring">
             Вся история →
           </Link>
         </div>

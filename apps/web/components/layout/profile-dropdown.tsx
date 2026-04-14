@@ -47,7 +47,7 @@ export function ProfileDropdown({ name, email, onLogout }: Props) {
         aria-expanded={open}
         aria-haspopup="true"
       >
-        <div className="w-8 h-8 bg-accent-100 text-accent-dark rounded-full flex items-center justify-center text-caption font-bold flex-shrink-0">
+        <div className="w-8 h-8 bg-primary-soft text-primary rounded-full flex items-center justify-center text-caption font-bold flex-shrink-0">
           {initials}
         </div>
         <span className="text-small text-txt-base font-medium hidden sm:block max-w-[120px] truncate">
@@ -72,7 +72,7 @@ export function ProfileDropdown({ name, email, onLogout }: Props) {
             {/* User info */}
             <div className="px-4 py-3 bg-bg-soft border-b border-border">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-accent-100 text-accent-dark rounded-full flex items-center justify-center text-body font-bold flex-shrink-0">
+                <div className="w-10 h-10 bg-primary-soft text-primary rounded-full flex items-center justify-center text-body font-bold flex-shrink-0">
                   {initials}
                 </div>
                 <div className="min-w-0">

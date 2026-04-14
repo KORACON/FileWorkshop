@@ -74,7 +74,7 @@ export function LandingPage({ onFileSelect }: Props) {
 function Step({ num, text }: { num: string; text: string }) {
   return (
     <div className="flex items-center gap-1.5">
-      <span className="w-5 h-5 bg-accent-100 text-accent-dark rounded-full flex items-center justify-center text-micro font-bold">
+      <span className="w-5 h-5 bg-primary-soft text-primary rounded-full flex items-center justify-center text-micro font-bold">
         {num}
       </span>
       <span className="hidden sm:inline">{text}</span>
@@ -84,7 +84,7 @@ function Step({ num, text }: { num: string; text: string }) {
 
 function Arrow() {
   return (
-    <svg width="16" height="8" viewBox="0 0 16 8" fill="none" stroke="#8E9DAD" strokeWidth="1.5" strokeLinecap="round" className="flex-shrink-0">
+    <svg width="16" height="8" viewBox="0 0 16 8" fill="none" stroke="#5E7088" strokeWidth="1.5" strokeLinecap="round" className="flex-shrink-0">
       <path d="M1 4h14M12 1l3 3-3 3" />
     </svg>
   );

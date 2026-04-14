@@ -16,6 +16,8 @@ export interface RemoveBgState {
   /** Размеры изображения */
   width: number;
   height: number;
+  /** Revision counter — increments on every paint stroke to trigger re-render */
+  paintRevision: number;
 }
 
 export interface RemoveBgActions {
@@ -48,6 +50,7 @@ export function useRemoveBg(imageUrl: string | null, threshold: number): [Remove
   const [brushSize, setBrushSize] = useState(20);
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
+  const [paintRevision, setPaintRevision] = useState(0);
 
   // Canvases
   const originalCanvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -135,6 +138,7 @@ export function useRemoveBg(imageUrl: string | null, threshold: number): [Remove
     ctx.fill();
 
     setHasManualEdits(true);
+    setPaintRevision((r) => r + 1);
     renderPreview(orig, mask, prev);
   }, [brushMode, brushSize]);
 
@@ -157,7 +161,7 @@ export function useRemoveBg(imageUrl: string | null, threshold: number): [Remove
 
   const getPreviewCanvas = useCallback(() => previewCanvasRef.current, []);
 
-  const state: RemoveBgState = { originalLoaded, previewReady, hasManualEdits, brushMode, brushSize, width, height };
+  const state: RemoveBgState = { originalLoaded, previewReady, hasManualEdits, brushMode, brushSize, width, height, paintRevision };
   const actions: RemoveBgActions = { setBrushMode, setBrushSize, resetMask, paint, getResultBlob, getPreviewCanvas };
 
   return [state, actions];

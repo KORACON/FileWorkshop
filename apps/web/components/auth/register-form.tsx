@@ -125,7 +125,7 @@ export function RegisterForm() {
 
       <p className="mt-4 text-center text-sm text-txt-muted">
         Уже есть аккаунт?{' '}
-        <Link href="/auth/login" className="text-accent hover:text-accent-dark font-medium">
+        <Link href="/auth/login" className="text-primary hover:text-primary-ring font-medium">
           Войти
         </Link>
       </p>

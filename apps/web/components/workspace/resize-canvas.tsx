@@ -108,8 +108,8 @@ export function ResizeCanvas({ imageUrl, width, height, onDrag, displayUnit, dis
       ref={containerRef}
       className="w-full h-full relative select-none"
       style={{
-        background: '#f8fafc',
-        backgroundImage: 'radial-gradient(circle, #e2e8f0 1px, transparent 1px)',
+        background: '#0B1220',
+        backgroundImage: 'radial-gradient(circle, #2B3D57 1px, transparent 1px)',
         backgroundSize: '20px 20px',
       }}
     >
@@ -165,7 +165,7 @@ export function ResizeCanvas({ imageUrl, width, height, onDrag, displayUnit, dis
         ))}
 
         {/* Size label */}
-        <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-txt-strong/90 text-white text-xs px-2.5 py-1 rounded-full whitespace-nowrap font-mono">
+        <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-surface-alt text-txt-strong text-xs px-2.5 py-1 rounded-full whitespace-nowrap font-mono border border-border">
           {displayW !== undefined ? `${displayW} × ${displayH} ${displayUnit || 'px'}` : `${width} × ${height} px`}
         </div>
       </div>

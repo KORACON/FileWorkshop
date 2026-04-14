@@ -46,7 +46,7 @@ export default function ToolPage({ params }: Props) {
           {tool.targetFormat && (
             <>
               <span>→</span>
-              <span className="bg-accent-50 text-accent-dark px-1.5 py-0.5 rounded">.{tool.targetFormat}</span>
+              <span className="bg-primary-soft text-primary px-1.5 py-0.5 rounded">.{tool.targetFormat}</span>
             </>
           )}
         </div>

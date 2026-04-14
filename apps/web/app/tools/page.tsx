@@ -20,7 +20,7 @@ export default function ToolsPage() {
             className="card hover:border-border-strong hover:shadow-card-hover transition-all text-center group"
           >
             <div className="text-3xl mb-2">{cat.icon}</div>
-            <h2 className="font-semibold text-txt-strong group-hover:text-accent">
+            <h2 className="font-semibold text-txt-strong group-hover:text-primary">
               {cat.name.ru}
             </h2>
             <p className="text-xs text-txt-faint mt-1">{cat.count} инструментов</p>

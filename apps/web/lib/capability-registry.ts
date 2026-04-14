@@ -148,7 +148,7 @@ const ACTIONS: CapabilityAction[] = [
   // ─── Images: Special ───
   {
     id: 'remove-bg', name: 'Убрать фон', description: 'Удалить задний фон с изображения',
-    icon: '✨', group: 'quick', operationType: 'image.remove_bg', targetFormat: 'png',
+    icon: '✨', group: 'edit', operationType: 'image.remove_bg', targetFormat: 'png',
     uiPanel: 'remove-bg', fileFamily: 'image',
     options: [{ key: 'threshold', type: 'slider', label: 'Чувствительность', defaultValue: '50', min: 1, max: 100 }],
   },
@@ -164,13 +164,6 @@ const ACTIONS: CapabilityAction[] = [
     icon: '🗜', group: 'edit', operationType: 'image.compress',
     uiPanel: 'generic', fileFamily: 'image',
     options: [{ key: 'quality', type: 'slider', label: 'Качество', defaultValue: '75', min: 1, max: 100 }],
-  },
-  {
-    id: 'rotate', name: 'Повернуть', description: 'Повернуть на 90°, 180°, 270°',
-    icon: '🔄', group: 'edit', operationType: 'image.rotate',
-    uiPanel: 'generic', fileFamily: 'image',
-    options: [{ key: 'rotation', type: 'select', label: 'Угол', defaultValue: '90',
-      choices: [{ value: '90', label: '90°' }, { value: '180', label: '180°' }, { value: '270', label: '270°' }] }],
   },
   {
     id: 'remove-exif', name: 'Удалить метаданные', description: 'Убрать EXIF, GPS, камеру',
@@ -257,10 +250,9 @@ const ACTIONS: CapabilityAction[] = [
 
 const SUPPORT_RULES: SupportRule[] = [
   // Images: process — основные форматы
-  { actionId: 'remove-bg',   extensions: ['jpg','jpeg','png','webp'] },
+  { actionId: 'remove-bg',   extensions: ['jpg','jpeg','png','webp','avif','bmp','tiff','tif','heic','heif','gif'] },
   { actionId: 'resize',      extensions: ['jpg','jpeg','png','webp','avif','bmp','tiff','tif'] },
   { actionId: 'compress',    extensions: ['jpg','jpeg','png','webp'] },
-  { actionId: 'rotate',      extensions: ['jpg','jpeg','png','webp','avif','bmp','tiff','tif'] },
   { actionId: 'remove-exif', extensions: ['jpg','jpeg','png','webp','tiff','tif'] },
   { actionId: 'crop',        extensions: ['jpg','jpeg','png','webp'] },
   // Images: convert — расширенная матрица
@@ -322,8 +314,8 @@ export function getActionsForFile(filename: string, mimeType?: string): Capabili
 
     if (!supported) continue;
 
-    // Не показываем конвертацию в тот же формат
-    if (action.targetFormat) {
+    // Не показываем конвертацию в тот же формат (кроме операций обработки вроде remove_bg)
+    if (action.targetFormat && action.operationType.endsWith('.convert')) {
       if (action.targetFormat === info.extension) continue;
       if (action.targetFormat === 'jpg' && info.extension === 'jpeg') continue;
       if (action.targetFormat === 'jpeg' && info.extension === 'jpg') continue;
