@@ -9,6 +9,10 @@ interface Props {
   width: number;
   height: number;
   onDrag: (handle: HandlePos, dxImg: number, dyImg: number) => void;
+  /** Display unit for size label */
+  displayUnit?: string;
+  displayW?: number;
+  displayH?: number;
 }
 
 const HANDLES: HandlePos[] = ['tl', 'tc', 'tr', 'ml', 'mr', 'bl', 'bc', 'br'];
@@ -24,7 +28,7 @@ const CURSORS: Record<HandlePos, string> = {
  * Handles report drag deltas in IMAGE pixels (not screen pixels).
  * All resize math is in use-resize-state hook.
  */
-export function ResizeCanvas({ imageUrl, width, height, onDrag }: Props) {
+export function ResizeCanvas({ imageUrl, width, height, onDrag, displayUnit, displayW, displayH }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerSize, setContainerSize] = useState({ w: 600, h: 400 });
   const [dragging, setDragging] = useState<HandlePos | null>(null);
@@ -129,15 +133,15 @@ export function ResizeCanvas({ imageUrl, width, height, onDrag }: Props) {
         />
 
         {/* Selection border */}
-        <div className="absolute inset-0 border-2 border-primary-500 pointer-events-none"
+        <div className="absolute inset-0 border-2 border-steel pointer-events-none"
           style={{ boxShadow: '0 0 0 9999px rgba(0,0,0,0.04)' }} />
 
         {/* Grid guides (rule of thirds) */}
         <div className="absolute inset-0 pointer-events-none opacity-30">
-          <div className="absolute left-1/3 top-0 bottom-0 w-px bg-primary-400" />
-          <div className="absolute left-2/3 top-0 bottom-0 w-px bg-primary-400" />
-          <div className="absolute top-1/3 left-0 right-0 h-px bg-primary-400" />
-          <div className="absolute top-2/3 left-0 right-0 h-px bg-primary-400" />
+          <div className="absolute left-1/3 top-0 bottom-0 w-px bg-steel-light" />
+          <div className="absolute left-2/3 top-0 bottom-0 w-px bg-steel-light" />
+          <div className="absolute top-1/3 left-0 right-0 h-px bg-steel-light" />
+          <div className="absolute top-2/3 left-0 right-0 h-px bg-steel-light" />
         </div>
 
         {/* 8 drag handles */}
@@ -146,7 +150,7 @@ export function ResizeCanvas({ imageUrl, width, height, onDrag }: Props) {
             key={h}
             onMouseDown={(e) => onMouseDown(h, e)}
             className={cn(
-              'absolute z-10 rounded-full bg-surface border-2 border-primary-500',
+              'absolute z-10 rounded-full bg-surface border-2 border-steel',
               'hover:bg-primary-100 hover:scale-110 active:scale-125',
               'transition-transform duration-75',
               dragging === h && 'bg-primary-200 scale-125',
@@ -162,7 +166,7 @@ export function ResizeCanvas({ imageUrl, width, height, onDrag }: Props) {
 
         {/* Size label */}
         <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-txt-strong/90 text-white text-xs px-2.5 py-1 rounded-full whitespace-nowrap font-mono">
-          {width} × {height}
+          {displayW !== undefined ? `${displayW} × ${displayH} ${displayUnit || 'px'}` : `${width} × ${height} px`}
         </div>
       </div>
     </div>

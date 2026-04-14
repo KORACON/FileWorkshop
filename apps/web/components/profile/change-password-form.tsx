@@ -42,7 +42,7 @@ export function ChangePasswordForm() {
       )}
 
       {success && (
-        <div className="mb-4 p-3 bg-success-light border border-success/20 rounded-lg text-sm text-green-700">
+        <div className="mb-4 p-3 bg-success-light border border-success/20 rounded-lg text-sm text-success-text">
           Пароль успешно изменён
         </div>
       )}

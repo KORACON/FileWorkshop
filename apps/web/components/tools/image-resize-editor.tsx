@@ -195,16 +195,16 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
 
             {/* Selection border */}
             <div
-              className="absolute inset-0 border-2 border-primary-500 rounded-sm"
+              className="absolute inset-0 border-2 border-steel rounded-sm"
               style={{ boxShadow: '0 0 0 9999px rgba(0,0,0,0.05)' }}
             />
 
             {/* Dashed guide lines */}
             <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute left-1/3 top-0 bottom-0 w-px border-l border-dashed border-primary-300 opacity-40" />
-              <div className="absolute left-2/3 top-0 bottom-0 w-px border-l border-dashed border-primary-300 opacity-40" />
-              <div className="absolute top-1/3 left-0 right-0 h-px border-t border-dashed border-primary-300 opacity-40" />
-              <div className="absolute top-2/3 left-0 right-0 h-px border-t border-dashed border-primary-300 opacity-40" />
+              <div className="absolute left-1/3 top-0 bottom-0 w-px border-l border-dashed border-steel-light opacity-40" />
+              <div className="absolute left-2/3 top-0 bottom-0 w-px border-l border-dashed border-steel-light opacity-40" />
+              <div className="absolute top-1/3 left-0 right-0 h-px border-t border-dashed border-steel-light opacity-40" />
+              <div className="absolute top-2/3 left-0 right-0 h-px border-t border-dashed border-steel-light opacity-40" />
             </div>
 
             {/* 8 resize handles */}
@@ -213,7 +213,7 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
                 key={pos}
                 onMouseDown={(e) => onHandleMouseDown(pos, e)}
                 className={cn(
-                  'absolute w-[10px] h-[10px] rounded-full bg-surface border-2 border-primary-500 z-10',
+                  'absolute w-[10px] h-[10px] rounded-full bg-surface border-2 border-steel z-10',
                   'hover:bg-primary-100 hover:scale-125 transition-transform',
                   dragging === pos && 'bg-primary-200 scale-125',
                 )}
@@ -240,7 +240,7 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
                 type="number"
                 value={width || ''}
                 onChange={(e) => setW(parseInt(e.target.value) || 0)}
-                className="w-24 px-3 py-2 border border-border rounded-lg text-center text-sm focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary"
+                className="w-24 px-3 py-2 border border-border rounded-lg text-center text-sm focus:outline-none focus:ring-2 focus:ring-accent-100 focus:border-accent"
                 min={1} max={16384}
               />
               <span className="ml-1 text-xs text-txt-faint">px</span>
@@ -252,7 +252,7 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
             className={cn(
               'mb-1 p-2 rounded-lg border-2 transition-all',
               lockRatio
-                ? 'border-primary-400 bg-primary-50 text-primary-600'
+                ? 'border-accent bg-accent-50 text-accent-dark'
                 : 'border-border text-txt-faint hover:border-border',
             )}
             title={lockRatio ? 'Пропорции зафиксированы' : 'Свободное изменение'}
@@ -279,7 +279,7 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
                 type="number"
                 value={height || ''}
                 onChange={(e) => setH(parseInt(e.target.value) || 0)}
-                className="w-24 px-3 py-2 border border-border rounded-lg text-center text-sm focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary"
+                className="w-24 px-3 py-2 border border-border rounded-lg text-center text-sm focus:outline-none focus:ring-2 focus:ring-accent-100 focus:border-accent"
                 min={1} max={16384}
               />
               <span className="ml-1 text-xs text-txt-faint">px</span>
@@ -300,8 +300,8 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
               className={cn(
                 'px-3 py-1.5 text-xs rounded-lg border transition-all',
                 scalePercent === p
-                  ? 'bg-primary-600 border-primary-600 text-white'
-                  : 'border-border text-txt-base hover:border-primary-400 hover:text-primary-600',
+                  ? 'bg-accent border-accent text-white'
+                  : 'border-border text-txt-base hover:border-accent-light hover:text-accent',
               )}
             >
               {p}%
@@ -319,7 +319,7 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
           <button
             onClick={() => onConfirm(width, height)}
             disabled={width < 1 || height < 1}
-            className="bg-primary-600 text-white px-8 py-2.5 rounded-xl font-medium hover:bg-primary-500 disabled:opacity-50 transition-colors"
+            className="bg-accent text-white px-8 py-2.5 rounded-xl font-medium hover:bg-accent-dark disabled:opacity-50 transition-colors"
           >
             Применить
           </button>

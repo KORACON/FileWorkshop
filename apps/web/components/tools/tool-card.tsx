@@ -9,10 +9,10 @@ export function ToolCard({ tool }: Props) {
   return (
     <Link
       href={`/tools/${tool.category}/${tool.id}`}
-      className="card hover:border-primary-300 hover:shadow-md transition-all duration-150 group"
+      className="card hover:border-border-strong hover:shadow-card-hover transition-all duration-150 group"
     >
       <div className="text-3xl mb-3">{tool.icon}</div>
-      <h3 className="font-semibold text-txt-strong group-hover:text-primary-600 transition-colors">
+      <h3 className="font-semibold text-txt-strong group-hover:text-accent transition-colors">
         {tool.name.ru}
       </h3>
       <p className="text-sm text-txt-muted mt-1">{tool.description.ru}</p>
@@ -25,7 +25,7 @@ export function ToolCard({ tool }: Props) {
         {tool.targetFormat && (
           <>
             <span className="text-xs text-txt-faint">→</span>
-            <span className="text-xs bg-primary-50 text-primary-600 px-1.5 py-0.5 rounded">
+            <span className="text-xs bg-accent-50 text-accent-dark px-1.5 py-0.5 rounded">
               .{tool.targetFormat}
             </span>
           </>

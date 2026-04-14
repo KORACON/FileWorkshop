@@ -67,7 +67,7 @@ export function BatchUploader({ tool, files, onFilesChange }: Props) {
 
               <button
                 onClick={() => removeFile(i)}
-                className="text-xs text-red-400 hover:text-error px-1"
+                className="text-xs text-error hover:text-error-text px-1"
                 aria-label="Удалить файл"
               >✕</button>
             </div>
@@ -79,7 +79,7 @@ export function BatchUploader({ tool, files, onFilesChange }: Props) {
       <div
         className={cn(
           'border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors',
-          isDragOver ? 'border-primary-500 bg-primary-50' : 'border-border hover:border-primary-400',
+          isDragOver ? 'border-accent bg-accent-50' : 'border-border hover:border-accent-light',
         )}
         onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
         onDragLeave={() => setIsDragOver(false)}

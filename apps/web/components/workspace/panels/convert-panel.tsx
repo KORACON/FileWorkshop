@@ -67,7 +67,7 @@ export function ConvertPanel({ sourceFormat, targetFormat, values, onChange, has
           <input
             type="range" min={1} max={100} value={quality}
             onChange={(e) => onChange('quality', e.target.value)}
-            className="w-full accent-primary h-2"
+            className="w-full accent-accent h-2"
           />
         </div>
       )}

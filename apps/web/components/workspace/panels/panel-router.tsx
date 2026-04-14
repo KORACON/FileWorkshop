@@ -20,6 +20,7 @@ interface Props {
   sourceFormat?: string;
   resizeState?: ResizeState;
   resizeActions?: ResizeActions;
+  onResizeUnitChange?: (unit: string) => void;
   removeBgState?: RemoveBgState;
   removeBgActions?: RemoveBgActions;
   showOriginal?: boolean;
@@ -32,7 +33,7 @@ export function PanelRouter(props: Props) {
   switch (action.uiPanel) {
     case 'resize':
       if (props.resizeState && props.resizeActions) {
-        return <ResizePanel state={props.resizeState} actions={props.resizeActions} />;
+        return <ResizePanel state={props.resizeState} actions={props.resizeActions} onUnitChange={props.onResizeUnitChange} />;
       }
       return null;
 

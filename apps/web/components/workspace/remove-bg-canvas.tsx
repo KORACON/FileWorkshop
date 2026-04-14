@@ -107,7 +107,7 @@ export function RemoveBgCanvas({ state, actions, showOriginal, originalImageUrl 
       {!state.previewReady && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin h-8 w-8 border-2 border-primary-600 border-t-transparent rounded-full mx-auto mb-3" />
+            <div className="animate-spin h-8 w-8 border-2 border-accent border-t-transparent rounded-full mx-auto mb-3" />
             <p className="text-sm text-txt-muted">Удаление фона...</p>
           </div>
         </div>

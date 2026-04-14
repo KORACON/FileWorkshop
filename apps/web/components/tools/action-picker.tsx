@@ -28,14 +28,14 @@ export function ActionPicker({ tools, fileCategory, onSelect }: Props) {
               <button
                 key={tool.id}
                 onClick={() => onSelect(tool)}
-                className="flex items-center gap-4 p-4 rounded-xl border-2 border-purple-200 bg-purple-50 hover:border-purple-400 hover:bg-purple-100 transition-all text-left group"
+                className="flex items-center gap-4 p-4 rounded-xl border-2 border-accent-200 bg-accent-50 hover:border-accent hover:bg-accent-100 transition-all text-left group"
               >
                 <span className="text-3xl">{tool.icon}</span>
                 <div>
-                  <p className="text-sm font-semibold text-purple-800 group-hover:text-purple-900">
+                  <p className="text-sm font-semibold text-accent-dark group-hover:text-navy">
                     {tool.name.ru}
                   </p>
-                  <p className="text-xs text-purple-500">{tool.description.ru}</p>
+                  <p className="text-xs text-steel">{tool.description.ru}</p>
                 </div>
               </button>
             ))}
@@ -52,11 +52,11 @@ export function ActionPicker({ tools, fileCategory, onSelect }: Props) {
               <button
                 key={tool.id}
                 onClick={() => onSelect(tool)}
-                className="flex items-center gap-3 p-3 rounded-xl border border-border hover:border-primary-400 hover:bg-primary-50 transition-all text-left group"
+                className="flex items-center gap-3 p-3 rounded-xl border border-border hover:border-accent hover:bg-accent-50 transition-all text-left group"
               >
                 <span className="text-2xl">{tool.icon}</span>
                 <div>
-                  <p className="text-sm font-medium text-txt-strong group-hover:text-primary-700">
+                  <p className="text-sm font-medium text-txt-strong group-hover:text-navy">
                     {tool.targetFormat?.toUpperCase()}
                   </p>
                   <p className="text-xs text-txt-faint">{tool.name.ru}</p>
@@ -76,11 +76,11 @@ export function ActionPicker({ tools, fileCategory, onSelect }: Props) {
               <button
                 key={tool.id}
                 onClick={() => onSelect(tool)}
-                className="flex items-center gap-3 p-3 rounded-xl border border-border hover:border-primary-400 hover:bg-primary-50 transition-all text-left group"
+                className="flex items-center gap-3 p-3 rounded-xl border border-border hover:border-accent hover:bg-accent-50 transition-all text-left group"
               >
                 <span className="text-2xl">{tool.icon}</span>
                 <div>
-                  <p className="text-sm font-medium text-txt-strong group-hover:text-primary-700">
+                  <p className="text-sm font-medium text-txt-strong group-hover:text-navy">
                     {tool.name.ru}
                   </p>
                   <p className="text-xs text-txt-faint">{tool.description.ru}</p>

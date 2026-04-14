@@ -15,12 +15,12 @@ export function JobStatusDisplay({ job, isPolling, pollingError, onDownload, onN
   // Polling error
   if (pollingError) {
     return (
-      <div className="card border-amber-200 bg-amber-50">
+      <div className="card border-warning/20 bg-warning-light">
         <div className="flex items-center gap-3">
           <span className="text-2xl">⚠️</span>
           <div>
-            <p className="text-sm font-medium text-amber-800">{pollingError}</p>
-            <button onClick={onNewFile} className="text-sm text-primary-600 hover:text-primary-500 mt-1">
+            <p className="text-sm font-medium text-warning-text">{pollingError}</p>
+            <button onClick={onNewFile} className="text-sm text-accent hover:text-accent-dark mt-1">
               Загрузить другой файл
             </button>
           </div>
@@ -57,7 +57,7 @@ export function JobStatusDisplay({ job, isPolling, pollingError, onDownload, onN
           <div className="flex-1">
             <p className="text-sm font-medium text-txt-base">Обработка...</p>
             <div className="mt-2 h-2 bg-bg-soft rounded-full overflow-hidden">
-              <div className="h-full bg-primary-500 rounded-full animate-pulse" style={{ width: '60%' }} />
+              <div className="h-full bg-accent rounded-full animate-pulse" style={{ width: '60%' }} />
             </div>
           </div>
         </div>
@@ -74,7 +74,7 @@ export function JobStatusDisplay({ job, isPolling, pollingError, onDownload, onN
         <div className="flex items-center gap-3 mb-4">
           <span className="text-2xl">✅</span>
           <div>
-            <p className="text-sm font-medium text-green-800">Готово</p>
+            <p className="text-sm font-medium text-success-text">Готово</p>
             {hasSizeInfo && (
               <p className="text-xs text-success">
                 {formatFileSize(job.fileSizeBefore)} → {formatFileSize(job.fileSizeAfter!)}
@@ -109,7 +109,7 @@ export function JobStatusDisplay({ job, isPolling, pollingError, onDownload, onN
         <div className="flex items-center gap-3 mb-3">
           <span className="text-2xl">❌</span>
           <div>
-            <p className="text-sm font-medium text-red-800">Ошибка обработки</p>
+            <p className="text-sm font-medium text-error-text">Ошибка обработки</p>
             {job.errorMessage && (
               <p className="text-xs text-error mt-1">{job.errorMessage}</p>
             )}

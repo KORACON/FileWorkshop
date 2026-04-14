@@ -36,7 +36,7 @@ export default function LoginPage() {
   if (authLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="animate-spin h-8 w-8 border-2 border-primary-600 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-2 border-accent border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -76,7 +76,7 @@ export default function LoginPage() {
 
           <p className="mt-4 text-center text-sm text-txt-muted">
             Нет аккаунта?{' '}
-            <Link href="/register" className="text-primary-600 hover:text-primary-500 font-medium">Зарегистрироваться</Link>
+            <Link href="/register" className="text-accent hover:text-accent-dark font-medium">Зарегистрироваться</Link>
           </p>
         </div>
       </div>

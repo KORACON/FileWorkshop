@@ -119,7 +119,7 @@ export default function PricingPage() {
               className={cn(
                 'px-5 py-2 rounded-badge text-small font-medium transition-all duration-200',
                 period === 'monthly'
-                  ? 'bg-primary text-white shadow-button'
+                  ? 'bg-accent text-white shadow-button'
                   : 'text-txt-muted hover:text-txt-base',
               )}
             >
@@ -130,7 +130,7 @@ export default function PricingPage() {
               className={cn(
                 'px-5 py-2 rounded-badge text-small font-medium transition-all duration-200 relative',
                 period === 'yearly'
-                  ? 'bg-primary text-white shadow-button'
+                  ? 'bg-accent text-white shadow-button'
                   : 'text-txt-muted hover:text-txt-base',
               )}
             >
@@ -156,14 +156,14 @@ export default function PricingPage() {
                 className={cn(
                   'relative flex flex-col rounded-card p-6',
                   plan.highlighted
-                    ? 'bg-surface border-2 border-primary shadow-card-hover ring-2 ring-primary-100'
+                    ? 'bg-surface border-2 border-accent shadow-card-hover ring-2 ring-accent-100'
                     : 'bg-surface border border-border shadow-card',
                 )}
               >
                 {/* Badge */}
                 {plan.badge && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="bg-primary text-white text-micro font-semibold px-3 py-1 rounded-full">
+                    <span className="bg-accent text-white text-micro font-semibold px-3 py-1 rounded-full">
                       {plan.badge}
                     </span>
                   </div>

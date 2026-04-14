@@ -23,7 +23,7 @@ export function GenericPanel({ options, values, onChange }: Props) {
                 type="range" min={opt.min || 1} max={opt.max || 100} step={opt.step || 1}
                 value={values[opt.key] || opt.defaultValue}
                 onChange={(e) => onChange(opt.key, e.target.value)}
-                className="flex-1 accent-primary h-2"
+                className="flex-1 accent-accent h-2"
               />
               <span className="text-caption font-mono text-txt-strong w-8 text-right">
                 {values[opt.key] || opt.defaultValue}

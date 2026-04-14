@@ -50,10 +50,10 @@ export function HowItWorks() {
           {steps.map((step, i) => (
             <ScrollReveal key={step.num} delay={i * 0.12}>
               <div className="text-center">
-                <div className="w-14 h-14 bg-primary-50 text-primary rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-14 h-14 bg-accent-50 text-accent rounded-2xl flex items-center justify-center mx-auto mb-4">
                   {step.icon}
                 </div>
-                <div className="text-micro text-primary font-bold uppercase tracking-wider mb-1">Шаг {step.num}</div>
+                <div className="text-micro text-accent font-bold uppercase tracking-wider mb-1">Шаг {step.num}</div>
                 <h3 className="text-h3 text-txt-strong mb-2">{step.title}</h3>
                 <p className="text-small text-txt-muted leading-relaxed">{step.text}</p>
               </div>

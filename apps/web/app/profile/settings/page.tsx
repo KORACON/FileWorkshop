@@ -42,7 +42,7 @@ export default function SettingsPage() {
         <h3 className="font-semibold text-txt-strong mb-4">Личные данные</h3>
 
         {profileSuccess && (
-          <div className="mb-4 p-3 bg-success-light border border-success/20 rounded-lg text-sm text-green-700">
+          <div className="mb-4 p-3 bg-success-light border border-success/20 rounded-lg text-sm text-success-text">
             Данные обновлены
           </div>
         )}

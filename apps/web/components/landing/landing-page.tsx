@@ -74,7 +74,7 @@ export function LandingPage({ onFileSelect }: Props) {
 function Step({ num, text }: { num: string; text: string }) {
   return (
     <div className="flex items-center gap-1.5">
-      <span className="w-5 h-5 bg-primary-100 text-primary rounded-full flex items-center justify-center text-micro font-bold">
+      <span className="w-5 h-5 bg-accent-100 text-accent-dark rounded-full flex items-center justify-center text-micro font-bold">
         {num}
       </span>
       <span className="hidden sm:inline">{text}</span>

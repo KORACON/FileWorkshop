@@ -135,9 +135,9 @@ function ActionItem({ action, active, onSelect, isQuick }: {
       className={cn(
         'w-full flex items-center gap-3 px-4 py-2.5 text-left transition-all duration-150',
         active
-          ? 'bg-primary-50 text-primary-700 border-l-2 border-primary'
+          ? 'bg-accent-50 text-navy border-l-2 border-accent'
           : 'hover:bg-bg-soft text-txt-base border-l-2 border-transparent',
-        isQuick && !active && 'bg-primary-50/50',
+        isQuick && !active && 'bg-accent-50/50',
       )}
     >
       <span className="text-body flex-shrink-0 w-6 text-center">{action.icon}</span>
@@ -146,7 +146,7 @@ function ActionItem({ action, active, onSelect, isQuick }: {
         <p className="text-micro text-txt-faint truncate">{action.description}</p>
       </div>
       {active && (
-        <span className="w-5 h-5 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+        <span className="w-5 h-5 bg-accent rounded-full flex items-center justify-center flex-shrink-0">
           <svg width="10" height="8" viewBox="0 0 10 8" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M1 4l3 3 5-5" />
           </svg>

@@ -41,11 +41,22 @@ export function WorkspaceShell() {
   // ── Resize ──
   const isResizing = ws.state === 'editing' && ws.selectedAction?.uiPanel === 'resize';
   const [resizeState, resizeActions] = useResizeState(isResizing ? ws.imageUrl : null);
+  const [resizeUnit, setResizeUnit] = useState('px');
   useEffect(() => {
     if (isResizing && resizeState.loaded && resizeState.width > 0) {
       ws.setOptions({ width: String(resizeState.width), height: String(resizeState.height), fit: 'fill' });
     }
   }, [isResizing, resizeState.width, resizeState.height, resizeState.loaded]); // eslint-disable-line
+
+  // Compute display values for canvas label
+  const PX_PER: Record<string, number> = { px: 1, '%': 1, mm: 96 / 25.4, cm: 96 / 2.54, in: 96 };
+  const UNIT_LABELS: Record<string, string> = { px: 'пикс', '%': '%', mm: 'мм', cm: 'см', in: 'дюйм' };
+  const resizeDisplayW = resizeUnit === '%' && resizeState.origW > 0
+    ? Math.round((resizeState.width / resizeState.origW) * 100 * 10) / 10
+    : Math.round((resizeState.width / (PX_PER[resizeUnit] || 1)) * 100) / 100;
+  const resizeDisplayH = resizeUnit === '%' && resizeState.origH > 0
+    ? Math.round((resizeState.height / resizeState.origH) * 100 * 10) / 10
+    : Math.round((resizeState.height / (PX_PER[resizeUnit] || 1)) * 100) / 100;
 
   // ── Remove BG ──
   const isRemovingBg = ws.state === 'editing' && ws.selectedAction?.uiPanel === 'remove-bg';
@@ -129,7 +140,8 @@ export function WorkspaceShell() {
         {/* Preview area */}
         <div className="flex-1 overflow-hidden min-w-0 relative">
           {isResizing && ws.imageUrl ? (
-            <ResizeCanvas imageUrl={ws.imageUrl} width={resizeState.width} height={resizeState.height} onDrag={resizeActions.applyDrag} />
+            <ResizeCanvas imageUrl={ws.imageUrl} width={resizeState.width} height={resizeState.height} onDrag={resizeActions.applyDrag}
+              displayUnit={UNIT_LABELS[resizeUnit] || 'пикс'} displayW={resizeDisplayW} displayH={resizeDisplayH} />
           ) : isRemovingBg && ws.imageUrl ? (
             <RemoveBgCanvas state={removeBgState} actions={removeBgActions} showOriginal={showOriginal} originalImageUrl={ws.imageUrl} />
           ) : (
@@ -184,6 +196,7 @@ export function WorkspaceShell() {
                   sourceFormat={ws.fileInfo?.extension || ''}
                   resizeState={isResizing ? resizeState : undefined}
                   resizeActions={isResizing ? resizeActions : undefined}
+                  onResizeUnitChange={setResizeUnit}
                   removeBgState={isRemovingBg ? removeBgState : undefined}
                   removeBgActions={isRemovingBg ? removeBgActions : undefined}
                   showOriginal={showOriginal}

@@ -17,10 +17,10 @@ export default function ToolsPage() {
           <Link
             key={cat.id}
             href={`/tools/${cat.id}`}
-            className="card hover:border-primary-300 hover:shadow-md transition-all text-center group"
+            className="card hover:border-border-strong hover:shadow-card-hover transition-all text-center group"
           >
             <div className="text-3xl mb-2">{cat.icon}</div>
-            <h2 className="font-semibold text-txt-strong group-hover:text-primary-600">
+            <h2 className="font-semibold text-txt-strong group-hover:text-accent">
               {cat.name.ru}
             </h2>
             <p className="text-xs text-txt-faint mt-1">{cat.count} инструментов</p>

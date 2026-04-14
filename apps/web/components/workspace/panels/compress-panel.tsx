@@ -31,7 +31,7 @@ export function CompressPanel({ fileSize, values, onChange }: Props) {
         <input
           type="range" min={1} max={100} value={quality}
           onChange={(e) => onChange('quality', e.target.value)}
-          className="w-full accent-primary h-2"
+          className="w-full accent-accent h-2"
         />
         <div className="flex justify-between text-micro text-txt-faint mt-1">
           <span>Минимум</span>

@@ -42,7 +42,7 @@ export function WorkspaceFooter({ state, job, isUploading, onProcess, onDownload
   if (state === 'processing') {
     return (
       <div className="flex items-center justify-center px-4 py-3 bg-surface border-t border-border">
-        <span className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full mr-2" />
+        <span className="animate-spin h-4 w-4 border-2 border-accent border-t-transparent rounded-full mr-2" />
         <span className="text-small text-txt-muted">Обработка файла...</span>
       </div>
     );

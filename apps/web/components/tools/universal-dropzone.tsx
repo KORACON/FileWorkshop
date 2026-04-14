@@ -53,8 +53,8 @@ export function UniversalDropzone({ onFileSelect, disabled }: Props) {
         <input ref={inputRef} type="file" onChange={handleInput} className="hidden" />
 
         {/* Крупная иконка */}
-        <div className="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-5">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2E5B88" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <div className="w-16 h-16 bg-accent-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4B6382" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
             <polyline points="17 8 12 3 7 8" />
             <line x1="12" y1="3" x2="12" y2="15" />
@@ -65,7 +65,7 @@ export function UniversalDropzone({ onFileSelect, disabled }: Props) {
           {isDragOver ? 'Отпустите файл' : 'Перетащите файл сюда'}
         </p>
         <p className="text-body text-txt-muted mb-4">
-          или <span className="text-primary font-medium cursor-pointer hover:underline">выберите с компьютера</span>
+          или <span className="text-accent font-medium cursor-pointer hover:underline">выберите с компьютера</span>
         </p>
         <p className="text-caption text-txt-faint">
           Изображения, PDF, документы · до 250 МБ

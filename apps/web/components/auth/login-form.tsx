@@ -89,7 +89,7 @@ export function LoginForm() {
 
       <p className="mt-4 text-center text-sm text-txt-muted">
         Нет аккаунта?{' '}
-        <Link href="/auth/register" className="text-primary-600 hover:text-primary-500 font-medium">
+        <Link href="/auth/register" className="text-accent hover:text-accent-dark font-medium">
           Зарегистрироваться
         </Link>
       </p>
