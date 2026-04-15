@@ -151,19 +151,21 @@ export function BurgerMenu({ actions, currentAction, onSelect, file, fileInfo, o
                             <motion.div
                               initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -6 }}
                               transition={{ duration: 0.12 }}
-                              className="absolute left-full top-0 ml-0.5 bg-surface border border-border rounded-card shadow-dropdown z-50 py-1.5"
+                              className="absolute left-full top-0 ml-0.5 bg-surface border border-border rounded-card shadow-dropdown z-50 p-2"
                             >
-                              {items.map((action) => {
-                                const isActive = currentAction?.id === action.id;
-                                return (
-                                  <button key={action.id} onClick={() => handleSelect(action)}
-                                    className={cn(
-                                      'w-full text-left px-5 py-2 text-small whitespace-nowrap transition-all duration-100',
-                                      isActive ? 'bg-primary-50 text-primary font-medium' : 'text-txt-base hover:bg-bg-soft hover:text-txt-strong',
-                                    )}
-                                  >{getActionLabel(action)}</button>
-                                );
-                              })}
+                              <div className="grid grid-cols-3 gap-1" style={{ minWidth: '240px' }}>
+                                {items.map((action) => {
+                                  const isActive = currentAction?.id === action.id;
+                                  return (
+                                    <button key={action.id} onClick={() => handleSelect(action)}
+                                      className={cn(
+                                        'text-center px-2 py-2 text-small rounded-badge whitespace-nowrap transition-all duration-100',
+                                        isActive ? 'bg-primary-50 text-primary font-medium' : 'text-txt-base hover:bg-bg-soft hover:text-txt-strong',
+                                      )}
+                                    >{getActionLabel(action)}</button>
+                                  );
+                                })}
+                              </div>
                             </motion.div>
                           )}
                         </AnimatePresence>
