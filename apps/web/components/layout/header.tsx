@@ -69,6 +69,7 @@ export function Header() {
             {/* Nav */}
             <nav className="hidden md:flex items-center gap-1">
               <Link href="/tools" className="btn-ghost">Инструменты</Link>
+              <Link href="/formats" className="btn-ghost">Форматы</Link>
               <Link href="/pricing" className="btn-ghost">Тарифы</Link>
             </nav>
 
