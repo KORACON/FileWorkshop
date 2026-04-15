@@ -11,7 +11,7 @@ interface Props {
   actions: CapabilityAction[];
   currentAction: CapabilityAction | null;
   onSelectAction: (action: CapabilityAction) => void;
-  onReplaceFile: () => void;
+  onReplaceFile: (newFile: File) => void;
 }
 
 export function WorkspaceToolbar({ file, fileFamily, fileInfo, actions, currentAction, onSelectAction, onReplaceFile }: Props) {
@@ -25,6 +25,7 @@ export function WorkspaceToolbar({ file, fileFamily, fileInfo, actions, currentA
         onSelect={onSelectAction}
         file={file}
         fileInfo={fileInfo}
+        onReplaceFile={onReplaceFile}
       />
 
       <div className="w-px h-5 bg-border" />
@@ -34,10 +35,6 @@ export function WorkspaceToolbar({ file, fileFamily, fileInfo, actions, currentA
         <span className="text-small text-txt-base truncate">{file.name}</span>
         <span className="text-caption text-txt-faint flex-shrink-0">{formatFileSize(file.size)}</span>
       </div>
-
-      <button onClick={onReplaceFile} className="btn-ghost text-caption">
-        Заменить файл
-      </button>
     </div>
   );
 }

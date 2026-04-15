@@ -65,7 +65,7 @@ export function RemoveBgCanvas({ state, actions, showOriginal, originalImageUrl 
       ctx.clearRect(0, 0, dispW, dispH);
       ctx.drawImage(previewCanvas, 0, 0, dispW, dispH);
     }
-  }, [state.previewReady, state.hasManualEdits, showOriginal, dispW, dispH, actions, originalImageUrl]);
+  }, [state.previewReady, state.hasManualEdits, state.paintRevision, showOriginal, dispW, dispH, actions, originalImageUrl]);
 
   // Convert screen coords to image coords
   const toImageCoords = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
