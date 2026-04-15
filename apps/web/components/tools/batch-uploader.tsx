@@ -79,7 +79,7 @@ export function BatchUploader({ tool, files, onFilesChange }: Props) {
       <div
         className={cn(
           'border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors',
-          isDragOver ? 'border-primary bg-primary-soft' : 'border-border hover:border-primary',
+          isDragOver ? 'border-accent bg-accent-50' : 'border-border hover:border-accent-light',
         )}
         onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
         onDragLeave={() => setIsDragOver(false)}

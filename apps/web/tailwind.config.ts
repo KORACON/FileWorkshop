@@ -1,10 +1,10 @@
 import type { Config } from 'tailwindcss';
 
 /**
- * Design System v4 — «Мастерская файлов»
+ * Design System v3 — «Мастерская файлов»
  *
- * Premium dark palette: deep navy + teal accent + gold premium.
- * Calm luxury, high-trust, modern SaaS aesthetic.
+ * Премиальная палитра: тёмный navy + стальной + тёплое золото.
+ * Японская эстетика: глубина, спокойствие, дороговизна.
  */
 const config: Config = {
   content: [
@@ -14,72 +14,68 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // ── Из палитры ──
+        navy:    { DEFAULT: '#071739', light: '#0D2450' },
+        steel:   { DEFAULT: '#4B6382', light: '#5A7494' },
+        silver:  { DEFAULT: '#A4B5C4', light: '#B8C6D2' },
+        ash:     { DEFAULT: '#CDD5DB', light: '#DDE3E8' },
+        bronze:  { DEFAULT: '#A68868', light: '#B89A7C' },
+        sand:    { DEFAULT: '#E3C39D', light: '#EDD4B5' },
+
         // ── Backgrounds ──
         bg: {
-          DEFAULT: '#0B1220',
-          soft: '#111A2B',
-          alt: '#162235',
+          DEFAULT: '#F0F2F5',   // Светлый нейтральный (не белый)
+          soft: '#E8ECF0',      // Вторичный фон секций
+          dark: '#071739',      // Тёмные секции (CTA, hero accent)
         },
         // ── Surfaces ──
         surface: {
-          DEFAULT: '#18263A',
-          hover: '#243752',
-          alt: '#1D2D44',
-          pressed: '#2A4060',
+          DEFAULT: '#FAFBFC',   // Карточки
+          hover: '#F3F5F8',     // Hover
+          alt: '#EDF0F4',       // Вторичные
         },
-        // ── Primary accent (teal) ──
+        // ── Primary (navy-gold) ──
         primary: {
-          DEFAULT: '#2EC5B6',
-          hover: '#26AE9F',
-          active: '#1F9488',
-          soft: '#163D42',
-          ring: '#57D9CC',
-          50: '#163D42',
-          100: '#1A4A4F',
-          200: '#26AE9F',
+          50: '#F0F3F8',
+          100: '#D9E0EC',
+          200: '#B3C1D9',
+          300: '#8DA2C6',
+          400: '#6783B3',
+          DEFAULT: '#4B6382',   // Стальной синий — основной акцент
+          500: '#4B6382',
+          600: '#3D5570',
+          700: '#071739',       // Navy — hover/pressed/заголовки
+          800: '#0D2450',
+          900: '#071739',
         },
-        // ── Premium accent (gold) ──
+        // ── Accent (тёплое золото) ──
         accent: {
-          DEFAULT: '#C9A56A',
-          hover: '#B79257',
-          soft: '#3A2E1C',
-          dark: '#B79257',
-          50: '#3A2E1C',
-          100: '#4A3D28',
-          200: '#C9A56A',
+          DEFAULT: '#A68868',   // Бронзовый — CTA, выделения
+          light: '#E3C39D',     // Песочный — hover, фоны
+          dark: '#8A7054',      // Тёмный бронзовый
+          50: '#FAF5EE',
+          100: '#F2E6D4',
+          200: '#E3C39D',
         },
         // ── Text ──
         txt: {
-          strong: '#F3F7FC',
-          base: '#B7C4D6',
-          muted: '#8697AD',
-          faint: '#5E7088',
-          light: '#F3F7FC',
+          strong: '#071739',    // Navy — заголовки
+          base: '#2D3E52',      // Тёмный стальной — основной текст
+          muted: '#6B7D8F',     // Стальной — подписи
+          faint: '#A4B5C4',     // Серебристый — placeholder
+          light: '#FAFBFC',     // Белый — на тёмном фоне
         },
         // ── Borders ──
         border: {
-          DEFAULT: '#2B3D57',
-          strong: '#3F5E87',
-          soft: '#314865',
-          accent: '#C9A56A',
+          DEFAULT: '#CDD5DB',   // Ash
+          strong: '#A4B5C4',    // Silver
+          accent: '#A68868',    // Bronze accent border
         },
         // ── Status ──
-        success: { DEFAULT: '#38C98D', light: '#173E2F', text: '#38C98D' },
-        error:   { DEFAULT: '#F36E7F', light: '#441F28', text: '#F36E7F' },
-        warning: { DEFAULT: '#E1B15C', light: '#3E3119', text: '#E1B15C' },
-        info:    { DEFAULT: '#69A8FF', light: '#1B3154', text: '#69A8FF' },
-        // ── Utility ──
-        input: {
-          DEFAULT: '#132033',
-          hover: '#17263B',
-          focus: '#182A41',
-        },
-        chip: '#203149',
-        tooltip: '#1B283A',
-        overlay: 'rgba(2, 8, 20, 0.55)',
-        // ── Legacy compat tokens ──
-        navy: { DEFAULT: '#0B1220', light: '#111A2B' },
-        steel: { DEFAULT: '#8697AD', light: '#B7C4D6' },
+        success: { DEFAULT: '#3D8B5E', light: '#E5F2EB', text: '#2A6B44' },
+        error:   { DEFAULT: '#C45454', light: '#FAE8E8', text: '#A03838' },
+        warning: { DEFAULT: '#B8883A', light: '#FBF2E3', text: '#8A6628' },
+        info:    { DEFAULT: '#4B6382', light: '#E8EDF3', text: '#3D5570' },
       },
       fontFamily: {
         display: ['Unbounded', 'system-ui', 'sans-serif'],
@@ -97,14 +93,13 @@ const config: Config = {
         'micro': ['0.6875rem', { lineHeight: '1.3', fontWeight: '500' }],
       },
       boxShadow: {
-        'card': '0 1px 4px rgba(2, 8, 20, 0.3), 0 1px 2px rgba(2, 8, 20, 0.2)',
-        'card-hover': '0 8px 24px rgba(2, 8, 20, 0.4), 0 2px 6px rgba(2, 8, 20, 0.25)',
-        'panel': '0 2px 12px rgba(2, 8, 20, 0.35)',
-        'dropdown': '0 12px 36px rgba(2, 8, 20, 0.5), 0 4px 12px rgba(2, 8, 20, 0.3)',
-        'button': '0 1px 3px rgba(2, 8, 20, 0.25)',
-        'focus': '0 0 0 3px rgba(46, 197, 182, 0.25)',
-        'gold': '0 4px 14px rgba(201, 165, 106, 0.2)',
-        'glow': '0 0 20px rgba(46, 197, 182, 0.15)',
+        'card': '0 1px 4px rgba(7, 23, 57, 0.06), 0 1px 2px rgba(7, 23, 57, 0.03)',
+        'card-hover': '0 6px 16px rgba(7, 23, 57, 0.08), 0 2px 4px rgba(7, 23, 57, 0.04)',
+        'panel': '0 2px 10px rgba(7, 23, 57, 0.07)',
+        'dropdown': '0 10px 30px rgba(7, 23, 57, 0.14), 0 2px 8px rgba(7, 23, 57, 0.06)',
+        'button': '0 1px 3px rgba(7, 23, 57, 0.08)',
+        'focus': '0 0 0 3px rgba(75, 99, 130, 0.2)',
+        'gold': '0 4px 14px rgba(166, 136, 104, 0.25)',
       },
       borderRadius: {
         'card': '12px',

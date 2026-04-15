@@ -17,7 +17,7 @@ export function ProfileCard() {
   return (
     <div className="card flex items-center gap-4">
       {/* Avatar (инициалы) */}
-      <div className="h-14 w-14 rounded-full bg-primary-soft text-primary flex items-center justify-center text-lg font-bold flex-shrink-0">
+      <div className="h-14 w-14 rounded-full bg-accent-100 text-accent-dark flex items-center justify-center text-lg font-bold flex-shrink-0">
         {initials}
       </div>
 

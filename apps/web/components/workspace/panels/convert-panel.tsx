@@ -50,7 +50,7 @@ export function ConvertPanel({ sourceFormat, targetFormat, values, onChange, has
       <div className="bg-bg-soft rounded-card p-3">
         <div className="flex items-center justify-center gap-3">
           <span className="badge badge-neutral font-mono">{src}</span>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#8697AD" strokeWidth="1.5" strokeLinecap="round">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#64748B" strokeWidth="1.5" strokeLinecap="round">
             <path d="M3 8h10M10 5l3 3-3 3" />
           </svg>
           <span className="badge badge-info font-mono">{tgt}</span>
@@ -67,7 +67,7 @@ export function ConvertPanel({ sourceFormat, targetFormat, values, onChange, has
           <input
             type="range" min={1} max={100} value={quality}
             onChange={(e) => onChange('quality', e.target.value)}
-            className="w-full accent-primary h-2"
+            className="w-full accent-accent h-2"
           />
         </div>
       )}

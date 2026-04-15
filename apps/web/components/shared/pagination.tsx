@@ -33,7 +33,7 @@ export function Pagination({ page, totalPages, onPageChange }: Props) {
             className={cn(
               'px-3 py-1.5 text-sm rounded-lg transition-colors',
               p === page
-                ? 'bg-primary text-bg'
+                ? 'bg-accent text-white'
                 : 'text-txt-base hover:bg-bg-soft',
             )}
           >

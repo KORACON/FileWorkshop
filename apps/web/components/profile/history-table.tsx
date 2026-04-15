@@ -117,7 +117,7 @@ export function HistoryTable({ items, onDelete, isDeleting }: Props) {
               <button
                 onClick={() => handleDownload(item.id)}
                 disabled={downloadingId === item.id}
-                className="text-xs text-primary hover:text-primary-ring font-medium disabled:opacity-50"
+                className="text-xs text-accent hover:text-accent-dark font-medium disabled:opacity-50"
                 title="Скачать результат"
               >
                 ⬇ Скачать

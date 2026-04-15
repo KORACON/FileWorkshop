@@ -19,6 +19,7 @@ export function WorkspaceFooter({ state, job, isUploading, onProcess, onDownload
     return (
       <div className="flex items-center justify-between px-4 py-3 bg-surface border-t border-border">
         <p className="text-small text-txt-faint">← Выберите действие в меню</p>
+        <button onClick={onReset} className="btn-ghost text-caption">Другой файл</button>
       </div>
     );
   }

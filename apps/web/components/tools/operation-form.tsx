@@ -39,7 +39,7 @@ export function OperationForm({ options, values, onChange }: Props) {
                 step={opt.step || 1}
                 value={values[opt.key] || opt.default}
                 onChange={(e) => update(opt.key, e.target.value)}
-                className="flex-1 accent-primary"
+                className="flex-1 accent-accent"
               />
               <span className="text-sm font-medium text-txt-base w-10 text-right">
                 {values[opt.key] || opt.default}

@@ -95,7 +95,7 @@ export function ResizePanel({ state, actions, onUnitChange }: Props) {
           className={cn(
             'p-2 rounded-button border-2 transition-all duration-150',
             lockRatio
-              ? 'border-primary bg-primary-soft text-primary'
+              ? 'border-accent bg-accent-50 text-accent'
               : 'border-border text-txt-faint hover:border-border-strong',
           )}
           title={lockRatio ? 'Пропорции зафиксированы' : 'Свободное изменение'}

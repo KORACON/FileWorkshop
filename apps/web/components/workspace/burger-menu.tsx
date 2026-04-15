@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { cn, formatFileSize } from '@/lib/utils';
 import type { CapabilityAction } from '@/lib/capability-registry';
 import type { FileInfo } from '@/lib/capability-registry';
 
@@ -12,89 +12,52 @@ interface Props {
   onSelect: (action: CapabilityAction) => void;
   file: File;
   fileInfo: FileInfo | null;
-  onReplaceFile: (newFile: File) => void;
 }
 
-interface MenuCategory {
-  id: string;
-  label: string;
-  groups: string[];
-  /** 'right' = flyout вправо, 'down' = аккордеон вниз */
-  expandDir: 'right' | 'down';
-}
+const GROUP_META: Record<string, { label: string; icon: string }> = {
+  quick:    { label: 'Быстрые действия', icon: '⚡' },
+  edit:     { label: 'Редактирование',   icon: '✏️' },
+  optimize: { label: 'Оптимизация',      icon: '📦' },
+  convert:  { label: 'Конвертация',       icon: '🔄' },
+  extra:    { label: 'Дополнительно',     icon: '⚙️' },
+};
 
-const CATEGORIES: MenuCategory[] = [
-  { id: 'convert', label: 'Конвертация', groups: ['convert'], expandDir: 'right' },
-  { id: 'edit', label: 'Редактирование', groups: ['quick', 'edit', 'optimize'], expandDir: 'down' },
-  { id: 'extra', label: 'Дополнительно', groups: ['extra'], expandDir: 'down' },
-];
+const GROUP_ORDER: string[] = ['quick', 'edit', 'optimize', 'convert', 'extra'];
 
-function getActionLabel(action: CapabilityAction): string {
-  if (action.group === 'convert' && action.targetFormat) {
-    return action.targetFormat.toUpperCase();
-  }
-  return action.name;
-}
-
-export function BurgerMenu({ actions, currentAction, onSelect, file, fileInfo, onReplaceFile }: Props) {
+export function BurgerMenu({ actions, currentAction, onSelect, file, fileInfo }: Props) {
   const [open, setOpen] = useState(false);
-  const [expandedDown, setExpandedDown] = useState<string | null>(null);
-  const [hoveredRight, setHoveredRight] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
-    const escHandler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') { setOpen(false); setExpandedDown(null); setHoveredRight(null); }
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setOpen(false);
     };
+    const escHandler = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('mousedown', handler);
     document.addEventListener('keydown', escHandler);
-    return () => document.removeEventListener('keydown', escHandler);
+    return () => { document.removeEventListener('mousedown', handler); document.removeEventListener('keydown', escHandler); };
   }, [open]);
 
-  const categoryActions = useCallback((catId: string) => {
-    const cat = CATEGORIES.find((c) => c.id === catId);
-    if (!cat) return [];
-    return actions.filter((a) => cat.groups.includes(a.group));
-  }, [actions]);
+  // Group actions
+  const groups = new Map<string, CapabilityAction[]>();
+  for (const a of actions) {
+    const list = groups.get(a.group) || [];
+    list.push(a);
+    groups.set(a.group, list);
+  }
 
-  const handleSelect = (action: CapabilityAction) => {
-    onSelect(action);
-    setOpen(false);
-    setExpandedDown(null);
-    setHoveredRight(null);
-  };
-
-  const handleReplaceFile = () => {
-    setOpen(false);
-    setExpandedDown(null);
-    setHoveredRight(null);
-    fileInputRef.current?.click();
-  };
-
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    if (files[0]) onReplaceFile(files[0]);
-    e.target.value = '';
-  };
-
-  const toggleDown = (catId: string) => {
-    setExpandedDown((prev) => (prev === catId ? null : catId));
-  };
-
-  const availableCategories = CATEGORIES.filter((cat) => categoryActions(cat.id).length > 0);
+  const handleSelect = (action: CapabilityAction) => { onSelect(action); setOpen(false); };
+  const ext = file.name.split('.').pop()?.toUpperCase() || '';
 
   return (
-    <>
-      <input ref={fileInputRef} type="file" onChange={handleFileInput} className="hidden" />
-
+    <div ref={menuRef} className="relative">
       {/* Trigger */}
       <button
-        onClick={() => { setOpen(!open); setExpandedDown(null); setHoveredRight(null); }}
+        onClick={() => setOpen(!open)}
         className={cn(
           'flex items-center gap-2 px-3.5 py-2 rounded-button text-small font-medium transition-all',
-          open
-            ? 'bg-surface-alt text-txt-strong shadow-button'
-            : 'bg-surface border border-border text-txt-base hover:border-border-strong hover:shadow-card',
+          open ? 'bg-primary text-white shadow-button' : 'bg-surface border border-border text-txt-base hover:border-border-strong hover:shadow-card',
         )}
       >
         <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
@@ -102,170 +65,93 @@ export function BurgerMenu({ actions, currentAction, onSelect, file, fileInfo, o
           <rect y="7.25" width="16" height="1.5" rx="0.75" />
           <rect y="12.5" width="16" height="1.5" rx="0.75" />
         </svg>
-        <span>{currentAction ? getActionLabel(currentAction) : 'Действия'}</span>
+        <span>{currentAction ? currentAction.name : 'Действия'}</span>
         <svg width="8" height="5" viewBox="0 0 8 5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
           className={cn('transition-transform duration-200', open && 'rotate-180')}>
           <path d="M1 1l3 3 3-3" />
         </svg>
       </button>
 
-      {/* Full-height panel */}
+      {/* Dropdown panel */}
       <AnimatePresence>
         {open && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-              className="fixed inset-0 bg-bg/60 z-40"
-              onClick={() => { setOpen(false); setExpandedDown(null); setHoveredRight(null); }}
-            />
+          <motion.div
+            initial={{ opacity: 0, y: -4, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -4, scale: 0.98 }}
+            transition={{ duration: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
+            className="absolute left-0 top-full mt-2 w-80 bg-surface border border-border rounded-card shadow-dropdown z-50 overflow-hidden"
+          >
+            {/* File summary */}
+            <div className="px-4 py-3 bg-bg-soft border-b border-border flex items-center gap-3">
+              <div className="w-9 h-9 bg-surface rounded-lg border border-border flex items-center justify-center flex-shrink-0">
+                <span className="text-body">{fileInfo?.familyIcon || '📎'}</span>
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-small font-medium text-txt-strong truncate">{file.name}</p>
+                <p className="text-micro text-txt-faint">
+                  {ext} · {formatFileSize(file.size)}
+                </p>
+              </div>
+            </div>
 
-            {/* Left panel */}
-            <motion.div
-              initial={{ x: -260, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -260, opacity: 0 }}
-              transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-              className="fixed left-0 top-[57px] bottom-0 w-56 bg-surface border-r border-border shadow-panel z-50 flex flex-col overflow-visible"
-            >
-              <div className="flex-1 overflow-visible py-2">
-                {availableCategories.map((cat) => {
-                  const items = categoryActions(cat.id);
-                  const hasActiveChild = items.some((a) => a.id === currentAction?.id);
+            {/* Action groups */}
+            <div className="max-h-[60vh] overflow-y-auto py-1">
+              {GROUP_ORDER.map((groupId) => {
+                const items = groups.get(groupId);
+                if (!items || items.length === 0) return null;
+                const meta = GROUP_META[groupId];
 
-                  if (cat.expandDir === 'right') {
-                    // ── Flyout вправо (конвертация) ──
-                    const isHovered = hoveredRight === cat.id;
-                    return (
-                      <div
-                        key={cat.id}
-                        className="relative"
-                      >
-                        <button
-                          onClick={() => setHoveredRight((prev) => (prev === cat.id ? null : cat.id))}
-                          className={cn(
-                            'w-full flex items-center justify-between px-5 py-3 text-left text-small font-medium transition-all duration-100',
-                            isHovered ? 'bg-bg-soft text-txt-strong' : 'text-txt-base hover:bg-bg-soft',
-                            hasActiveChild && !isHovered && 'text-accent',
-                          )}
-                        >
-                          <span>{cat.label}</span>
-                          <svg width="6" height="10" viewBox="0 0 6 10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-                            <path d="M1 1l4 4-4 4" />
-                          </svg>
-                        </button>
-
-                        <AnimatePresence>
-                          {isHovered && items.length > 0 && (
-                            <motion.div
-                              initial={{ opacity: 0, x: -6 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              exit={{ opacity: 0, x: -6 }}
-                              transition={{ duration: 0.12 }}
-                              className="absolute left-full top-0 ml-0.5 bg-surface border border-border rounded-card shadow-dropdown z-50 py-1.5"
-                            >
-                              {items.map((action) => {
-                                const isActive = currentAction?.id === action.id;
-                                return (
-                                  <button
-                                    key={action.id}
-                                    onClick={() => handleSelect(action)}
-                                    className={cn(
-                                      'w-full text-left px-5 py-2 text-small whitespace-nowrap transition-all duration-100',
-                                      isActive
-                                        ? 'bg-primary-soft text-primary font-medium'
-                                        : 'text-txt-base hover:bg-bg-soft hover:text-txt-strong',
-                                    )}
-                                  >
-                                    {getActionLabel(action)}
-                                  </button>
-                                );
-                              })}
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    );
-                  }
-
-                  // ── Аккордеон вниз (редактирование, дополнительно) ──
-                  const isExpanded = expandedDown === cat.id;
-                  return (
-                    <div key={cat.id}>
-                      <button
-                        onClick={() => toggleDown(cat.id)}
-                        className={cn(
-                          'w-full flex items-center justify-between px-5 py-3 text-left text-small font-medium transition-all duration-100',
-                          isExpanded ? 'bg-bg-soft text-txt-strong' : 'text-txt-base hover:bg-bg-soft',
-                          hasActiveChild && !isExpanded && 'text-accent',
-                        )}
-                      >
-                        <span>{cat.label}</span>
-                        <svg
-                          width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
-                          className={cn('transition-transform duration-200', isExpanded && 'rotate-180')}
-                        >
-                          <path d="M1 1l4 4 4-4" />
-                        </svg>
-                      </button>
-
-                      <AnimatePresence>
-                        {isExpanded && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: 'auto', opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.15 }}
-                            className="overflow-hidden"
-                          >
-                            <div className="py-1 bg-bg-soft/50">
-                              {items.map((action) => {
-                                const isActive = currentAction?.id === action.id;
-                                return (
-                                  <button
-                                    key={action.id}
-                                    onClick={() => handleSelect(action)}
-                                    className={cn(
-                                      'w-full text-left pl-8 pr-5 py-2.5 text-small transition-all duration-100',
-                                      isActive
-                                        ? 'bg-primary-soft text-primary font-medium'
-                                        : 'text-txt-base hover:bg-bg-soft hover:text-txt-strong',
-                                    )}
-                                  >
-                                    {getActionLabel(action)}
-                                  </button>
-                                );
-                              })}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                return (
+                  <div key={groupId}>
+                    <div className="px-4 pt-3 pb-1.5 flex items-center gap-1.5">
+                      <span className="text-micro">{meta.icon}</span>
+                      <span className="text-micro text-txt-faint uppercase tracking-wider font-medium">{meta.label}</span>
                     </div>
-                  );
-                })}
-              </div>
+                    {items.map((a) => (
+                      <ActionItem key={a.id} action={a} active={currentAction?.id === a.id} onSelect={handleSelect} isQuick={groupId === 'quick'} />
+                    ))}
+                  </div>
+                );
+              })}
 
-              {/* Replace file — bottom */}
-              <div className="border-t border-border p-3">
-                <button
-                  onClick={handleReplaceFile}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-button text-small text-txt-muted hover:bg-bg-soft hover:text-txt-base transition-all duration-100"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-                    <polyline points="17 8 12 3 7 8" />
-                    <line x1="12" y1="3" x2="12" y2="15" />
-                  </svg>
-                  <span>Заменить файл</span>
-                </button>
-              </div>
-            </motion.div>
-          </>
+              {actions.length === 0 && (
+                <div className="px-4 py-6 text-small text-txt-faint text-center">Нет доступных действий</div>
+              )}
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </div>
+  );
+}
+
+function ActionItem({ action, active, onSelect, isQuick }: {
+  action: CapabilityAction; active: boolean; onSelect: (a: CapabilityAction) => void; isQuick?: boolean;
+}) {
+  return (
+    <button
+      onClick={() => onSelect(action)}
+      className={cn(
+        'w-full flex items-center gap-3 px-4 py-2.5 text-left transition-all duration-150',
+        active
+          ? 'bg-accent-50 text-navy border-l-2 border-accent'
+          : 'hover:bg-bg-soft text-txt-base border-l-2 border-transparent',
+        isQuick && !active && 'bg-accent-50/50',
+      )}
+    >
+      <span className="text-body flex-shrink-0 w-6 text-center">{action.icon}</span>
+      <div className="min-w-0 flex-1">
+        <p className="text-small font-medium">{action.name}</p>
+        <p className="text-micro text-txt-faint truncate">{action.description}</p>
+      </div>
+      {active && (
+        <span className="w-5 h-5 bg-accent rounded-full flex items-center justify-center flex-shrink-0">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M1 4l3 3 5-5" />
+          </svg>
+        </span>
+      )}
+    </button>
   );
 }

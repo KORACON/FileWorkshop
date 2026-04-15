@@ -65,7 +65,7 @@ export function RemoveBgCanvas({ state, actions, showOriginal, originalImageUrl 
       ctx.clearRect(0, 0, dispW, dispH);
       ctx.drawImage(previewCanvas, 0, 0, dispW, dispH);
     }
-  }, [state.previewReady, state.hasManualEdits, state.paintRevision, showOriginal, dispW, dispH, actions, originalImageUrl]);
+  }, [state.previewReady, state.hasManualEdits, showOriginal, dispW, dispH, actions, originalImageUrl]);
 
   // Convert screen coords to image coords
   const toImageCoords = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -93,7 +93,7 @@ export function RemoveBgCanvas({ state, actions, showOriginal, originalImageUrl 
   const handleMouseUp = useCallback(() => setIsPainting(false), []);
 
   // Checkerboard pattern for transparency
-  const checkerboard = "url(\"data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='10' height='10' fill='%23162235'/%3E%3Crect x='10' y='10' width='10' height='10' fill='%23162235'/%3E%3Crect x='10' width='10' height='10' fill='%231D2D44'/%3E%3Crect y='10' width='10' height='10' fill='%231D2D44'/%3E%3C/svg%3E\")";
+  const checkerboard = "url(\"data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='10' height='10' fill='%23e5e7eb'/%3E%3Crect x='10' y='10' width='10' height='10' fill='%23e5e7eb'/%3E%3Crect x='10' width='10' height='10' fill='%23f3f4f6'/%3E%3Crect y='10' width='10' height='10' fill='%23f3f4f6'/%3E%3C/svg%3E\")";
 
   // Brush cursor
   const cursorSize = Math.round(state.brushSize * scale);

@@ -222,7 +222,7 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
             ))}
 
             {/* Size label on image */}
-            <div className="absolute -bottom-7 left-1/2 -translate-x-1/2 bg-surface-alt text-txt-strong text-xs px-2 py-0.5 rounded-full whitespace-nowrap border border-border">
+            <div className="absolute -bottom-7 left-1/2 -translate-x-1/2 bg-txt-strong text-white text-xs px-2 py-0.5 rounded-full whitespace-nowrap">
               {width} × {height} px
             </div>
           </div>
@@ -252,7 +252,7 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
             className={cn(
               'mb-1 p-2 rounded-lg border-2 transition-all',
               lockRatio
-                ? 'border-primary bg-primary-soft text-primary'
+                ? 'border-accent bg-accent-50 text-accent-dark'
                 : 'border-border text-txt-faint hover:border-border',
             )}
             title={lockRatio ? 'Пропорции зафиксированы' : 'Свободное изменение'}
@@ -300,7 +300,7 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
               className={cn(
                 'px-3 py-1.5 text-xs rounded-lg border transition-all',
                 scalePercent === p
-                  ? 'bg-primary border-primary text-bg'
+                  ? 'bg-accent border-accent text-white'
                   : 'border-border text-txt-base hover:border-accent-light hover:text-accent',
               )}
             >
@@ -319,7 +319,7 @@ export function ImageResizeEditor({ file, onConfirm, onCancel }: Props) {
           <button
             onClick={() => onConfirm(width, height)}
             disabled={width < 1 || height < 1}
-            className="bg-primary text-bg px-8 py-2.5 rounded-xl font-medium hover:bg-primary-hover disabled:opacity-50 transition-colors"
+            className="bg-accent text-white px-8 py-2.5 rounded-xl font-medium hover:bg-accent-dark disabled:opacity-50 transition-colors"
           >
             Применить
           </button>

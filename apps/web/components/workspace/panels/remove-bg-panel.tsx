@@ -48,7 +48,7 @@ export function RemoveBgPanel({ state, actions, threshold, onThresholdChange, sh
         <input
           type="range" min={1} max={100} value={thresholdNum}
           onChange={(e) => onThresholdChange(e.target.value)}
-          className="w-full accent-primary h-2"
+          className="w-full accent-accent h-2"
         />
         <p className="text-micro text-txt-faint mt-1">
           Больше → удаляет больше фона. Меньше → точнее сохраняет объект.
@@ -92,7 +92,7 @@ export function RemoveBgPanel({ state, actions, threshold, onThresholdChange, sh
           <input
             type="range" min={5} max={100} value={state.brushSize}
             onChange={(e) => actions.setBrushSize(parseInt(e.target.value, 10))}
-            className="w-full accent-primary h-1.5"
+            className="w-full accent-steel h-1.5"
           />
         </div>
       </div>

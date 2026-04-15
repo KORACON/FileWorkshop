@@ -130,7 +130,7 @@ export function WorkspaceShell() {
           actions={actions}
           currentAction={ws.selectedAction}
           onSelectAction={ws.selectAction}
-          onReplaceFile={ws.loadFile}
+          onReplaceFile={ws.reset}
         />
       )}
 
