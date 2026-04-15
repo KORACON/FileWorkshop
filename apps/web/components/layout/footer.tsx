@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -50,23 +50,33 @@ const COLUMNS: FooterColumn[] = [
 ];
 
 const LANGUAGES = [
-  { code: 'ru', label: 'Русский', flag: '🇷🇺' },
-  { code: 'en', label: 'English', flag: '🇬🇧' },
-  { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
-  { code: 'fr', label: 'Français', flag: '🇫🇷' },
-  { code: 'es', label: 'Español', flag: '🇪🇸' },
+  { code: 'ru', label: 'Русский' },
+  { code: 'en', label: 'English' },
+  { code: 'de', label: 'Deutsch' },
+  { code: 'fr', label: 'Français' },
+  { code: 'es', label: 'Español' },
 ];
 
 export function Footer() {
   const [langOpen, setLangOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState(LANGUAGES[0]);
+  const langRef = useRef<HTMLDivElement>(null);
+
+  // Close on outside click
+  useEffect(() => {
+    if (!langOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) setLangOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [langOpen]);
 
   return (
     <footer className="bg-navy text-txt-light mt-auto">
       {/* Main footer content */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
-          {/* Columns */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {COLUMNS.map((col) => (
             <div key={col.title}>
               <h3 className="text-caption font-semibold text-white uppercase tracking-wider mb-4">
@@ -86,47 +96,6 @@ export function Footer() {
               </ul>
             </div>
           ))}
-
-          {/* Language selector column */}
-          <div>
-            <h3 className="text-caption font-semibold text-white uppercase tracking-wider mb-4">
-              Язык
-            </h3>
-            <div className="relative">
-              <button
-                onClick={() => setLangOpen(!langOpen)}
-                className="flex items-center gap-2.5 w-full px-3 py-2.5 bg-navy-light border border-steel/30 rounded-button text-small text-silver hover:text-white hover:border-steel/50 transition-all duration-150"
-              >
-                <span className="text-body">{currentLang.flag}</span>
-                <span className="flex-1 text-left">{currentLang.label}</span>
-                <svg
-                  width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
-                  className={`transition-transform duration-200 ${langOpen ? 'rotate-180' : ''}`}
-                >
-                  <path d="M1 1l4 4 4-4" />
-                </svg>
-              </button>
-
-              {langOpen && (
-                <div className="absolute bottom-full left-0 mb-1 w-full bg-navy-light border border-steel/30 rounded-card shadow-dropdown z-10 py-1 overflow-hidden">
-                  {LANGUAGES.map((lang) => (
-                    <button
-                      key={lang.code}
-                      onClick={() => { setCurrentLang(lang); setLangOpen(false); }}
-                      className={`w-full flex items-center gap-2.5 px-3 py-2 text-small text-left transition-colors duration-100 ${
-                        currentLang.code === lang.code
-                          ? 'text-white bg-steel/20'
-                          : 'text-silver hover:text-white hover:bg-steel/10'
-                      }`}
-                    >
-                      <span className="text-body">{lang.flag}</span>
-                      <span>{lang.label}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
         </div>
       </div>
 
@@ -134,16 +103,62 @@ export function Footer() {
       <div className="border-t border-steel/20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
-            <div className="flex items-center gap-2.5 text-small text-silver">
-              <Image src="/logo.png" alt="" width={20} height={20} className="rounded opacity-70" />
-              <span>© {new Date().getFullYear()} Мастерская файлов. Все права защищены.</span>
+            {/* Left: copyright */}
+            <div className="flex items-center gap-4 text-small text-silver">
+              <div className="flex items-center gap-2">
+                <Image src="/logo.png" alt="" width={20} height={20} className="rounded opacity-70" />
+                <span>© {new Date().getFullYear()} Мастерская файлов</span>
+              </div>
+              <span className="text-steel/40 hidden sm:inline">·</span>
+              <Link href="/privacy" className="text-micro text-steel hover:text-silver transition-colors hidden sm:inline">Конфиденциальность</Link>
+              <span className="text-steel/40 hidden sm:inline">·</span>
+              <Link href="/terms" className="text-micro text-steel hover:text-silver transition-colors hidden sm:inline">Условия</Link>
             </div>
-            <div className="flex items-center gap-4 text-micro text-steel">
-              <Link href="/privacy" className="hover:text-silver transition-colors">Конфиденциальность</Link>
-              <span className="text-steel/40">·</span>
-              <Link href="/terms" className="hover:text-silver transition-colors">Условия</Link>
-              <span className="text-steel/40">·</span>
-              <Link href="/cookies" className="hover:text-silver transition-colors">Cookie</Link>
+
+            {/* Right: language selector */}
+            <div ref={langRef} className="relative">
+              <button
+                onClick={() => setLangOpen(!langOpen)}
+                className="flex items-center gap-2 text-small text-silver hover:text-white transition-colors duration-150"
+              >
+                {/* Globe icon */}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="opacity-70">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="2" y1="12" x2="22" y2="12" />
+                  <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+                </svg>
+                <span>{currentLang.label}</span>
+                <svg
+                  width="8" height="5" viewBox="0 0 8 5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
+                  className={`transition-transform duration-200 opacity-50 ${langOpen ? 'rotate-180' : ''}`}
+                >
+                  <path d="M1 1l3 3 3-3" />
+                </svg>
+              </button>
+
+              {/* Dropdown — opens upward */}
+              {langOpen && (
+                <div className="absolute bottom-full right-0 mb-2 w-44 bg-navy-light border border-steel/30 rounded-card shadow-dropdown py-1 overflow-hidden">
+                  {LANGUAGES.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => { setCurrentLang(lang); setLangOpen(false); }}
+                      className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-small text-left transition-colors duration-100 ${
+                        currentLang.code === lang.code
+                          ? 'text-white bg-steel/20'
+                          : 'text-silver hover:text-white hover:bg-steel/10'
+                      }`}
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="opacity-50 flex-shrink-0">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="2" y1="12" x2="22" y2="12" />
+                        <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+                      </svg>
+                      <span>{lang.label}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
