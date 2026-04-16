@@ -18,6 +18,7 @@ import { WorkspaceToolbar } from './workspace-toolbar';
 import { WorkspacePreview } from './workspace-preview';
 import { ResizeCanvas } from './resize-canvas';
 import { RemoveBgCanvas } from './remove-bg-canvas';
+import { PdfPagesPreview } from './pdf-pages-preview';
 import { WorkspaceFooter } from './workspace-footer';
 import { PanelRouter } from './panels/panel-router';
 
@@ -64,6 +65,20 @@ export function WorkspaceShell() {
   const [removeBgState, removeBgActions] = useRemoveBg(isRemovingBg ? ws.imageUrl : null, threshold);
   const [showOriginal, setShowOriginal] = useState(false);
   useEffect(() => { setShowOriginal(false); }, [ws.selectedAction]);
+
+  // ── PDF file URL for preview ──
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (ws.file && ws.fileFamily === 'pdf') {
+      const url = URL.createObjectURL(ws.file);
+      setPdfUrl(url);
+      return () => URL.revokeObjectURL(url);
+    }
+    setPdfUrl(null);
+  }, [ws.file, ws.fileFamily]);
+
+  const isPdfPageNumbers = ws.state === 'editing' && ws.selectedAction?.uiPanel === 'pdf-page-numbers';
+  const isPdfAction = ws.state === 'editing' && ws.fileFamily === 'pdf' && ws.selectedAction;
 
   // ── Process ──
   const handleProcess = useCallback(async () => {
@@ -144,6 +159,13 @@ export function WorkspaceShell() {
               displayUnit={UNIT_LABELS[resizeUnit] || 'пикс'} displayW={resizeDisplayW} displayH={resizeDisplayH} />
           ) : isRemovingBg && ws.imageUrl ? (
             <RemoveBgCanvas state={removeBgState} actions={removeBgActions} showOriginal={showOriginal} originalImageUrl={ws.imageUrl} />
+          ) : pdfUrl && (isPdfAction || ws.fileFamily === 'pdf') ? (
+            <PdfPagesPreview
+              fileUrl={pdfUrl}
+              position={ws.options.position}
+              startNumber={parseInt(ws.options.startNumber || '1', 10)}
+              format={ws.options.format}
+            />
           ) : (
             <div className="w-full h-full flex items-center justify-center p-6">
               <WorkspacePreview imageUrl={ws.imageUrl} fileFamily={ws.fileFamily} fileName={ws.file?.name || ''} state={ws.state} />

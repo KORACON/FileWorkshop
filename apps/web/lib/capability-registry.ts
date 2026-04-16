@@ -24,7 +24,7 @@ export type ActionGroup = 'quick' | 'convert' | 'edit' | 'optimize' | 'extra'
   | 'pdf-organize' | 'pdf-optimize' | 'pdf-edit' | 'pdf-protect';
 
 /** Какой UI-panel рендерить для этого действия */
-export type UiPanel = 'resize' | 'remove-bg' | 'generic' | 'instant';
+export type UiPanel = 'resize' | 'remove-bg' | 'generic' | 'instant' | 'pdf-page-numbers';
 
 export interface ActionOption {
   key: string;
@@ -252,9 +252,26 @@ const ACTIONS: CapabilityAction[] = [
     options: [{ key: 'rotation', type: 'select', label: 'Угол', defaultValue: '90',
       choices: [{ value: '90', label: '90°' }, { value: '180', label: '180°' }, { value: '270', label: '270°' }] }] },
   { id: 'pdf-page-numbers', name: 'Добавить номера страниц', description: 'Пронумеровать страницы PDF',
-    icon: '', group: 'pdf-edit', operationType: 'pdf.add_page_numbers', uiPanel: 'generic', fileFamily: 'pdf',
-    options: [{ key: 'position', type: 'select', label: 'Позиция', defaultValue: 'bottom-center',
-      choices: [{ value: 'bottom-center', label: 'Внизу по центру' }, { value: 'bottom-right', label: 'Внизу справа' }, { value: 'top-center', label: 'Вверху по центру' }, { value: 'top-right', label: 'Вверху справа' }] }] },
+    icon: '', group: 'pdf-edit', operationType: 'pdf.add_page_numbers', uiPanel: 'pdf-page-numbers', fileFamily: 'pdf',
+    options: [
+      { key: 'position', type: 'select', label: 'Позиция', defaultValue: 'bottom-center',
+        choices: [
+          { value: 'top-left', label: 'Вверху слева' }, { value: 'top-center', label: 'Вверху по центру' }, { value: 'top-right', label: 'Вверху справа' },
+          { value: 'bottom-left', label: 'Внизу слева' }, { value: 'bottom-center', label: 'Внизу по центру' }, { value: 'bottom-right', label: 'Внизу справа' },
+        ] },
+      { key: 'startNumber', type: 'number', label: 'Начать с номера', defaultValue: '1', min: 1 },
+      { key: 'fromPage', type: 'number', label: 'От страницы', defaultValue: '1', min: 1 },
+      { key: 'toPage', type: 'number', label: 'До страницы', defaultValue: '', min: 1 },
+      { key: 'format', type: 'select', label: 'Формат текста', defaultValue: '{n}',
+        choices: [
+          { value: '{n}', label: 'Только номер (1, 2, 3...)' },
+          { value: 'Страница {n}', label: 'Страница 1, Страница 2...' },
+          { value: '{n} из {total}', label: '1 из 15, 2 из 15...' },
+          { value: 'Страница {n} из {total}', label: 'Страница 1 из 15...' },
+        ] },
+      { key: 'fontSize', type: 'select', label: 'Размер шрифта', defaultValue: '12',
+        choices: [{ value: '8', label: 'Маленький' }, { value: '12', label: 'Средний' }, { value: '16', label: 'Большой' }] },
+    ] },
   { id: 'pdf-watermark', name: 'Добавить водяной знак', description: 'Наложить текстовый штамп',
     icon: '', group: 'pdf-edit', operationType: 'pdf.watermark', uiPanel: 'generic', fileFamily: 'pdf',
     options: [

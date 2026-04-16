@@ -9,6 +9,7 @@ import { RemoveBgPanel } from './remove-bg-panel';
 import { CompressPanel } from './compress-panel';
 import { ConvertPanel } from './convert-panel';
 import { InstantPanel } from './instant-panel';
+import { PdfPageNumbersPanel } from './pdf-page-numbers-panel';
 
 interface Props {
   action: CapabilityAction;
@@ -54,6 +55,9 @@ export function PanelRouter(props: Props) {
 
     case 'instant':
       return <InstantPanel description={action.description} />;
+
+    case 'pdf-page-numbers':
+      return <PdfPageNumbersPanel values={values} onChange={onChange} />;
 
     case 'generic':
     default:
