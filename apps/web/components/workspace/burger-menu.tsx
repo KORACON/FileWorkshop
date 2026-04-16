@@ -58,11 +58,14 @@ export function BurgerMenu({ actions, currentAction, onSelect, file, fileInfo, o
     return () => document.removeEventListener('keydown', escHandler);
   }, [open]);
 
+  const isPdf = fileInfo?.family === 'pdf';
+  const menuCategories = isPdf ? PDF_CATEGORIES : CATEGORIES;
+
   const categoryActions = useCallback((catId: string) => {
-    const cat = CATEGORIES.find((c) => c.id === catId);
+    const cat = menuCategories.find((c) => c.id === catId);
     if (!cat) return [];
     return actions.filter((a) => cat.groups.includes(a.group));
-  }, [actions]);
+  }, [actions, menuCategories]);
 
   const handleSelect = (action: CapabilityAction) => {
     onSelect(action);
@@ -88,8 +91,6 @@ export function BurgerMenu({ actions, currentAction, onSelect, file, fileInfo, o
     setExpandedDown((prev) => (prev === catId ? null : catId));
   };
 
-  const isPdf = fileInfo?.family === 'pdf';
-  const menuCategories = isPdf ? PDF_CATEGORIES : CATEGORIES;
   const availableCategories = menuCategories.filter((cat) => categoryActions(cat.id).length > 0);
 
   return (
