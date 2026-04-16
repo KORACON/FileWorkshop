@@ -57,7 +57,7 @@ export function PanelRouter(props: Props) {
       return <InstantPanel description={action.description} />;
 
     case 'pdf-page-numbers':
-      return <PdfPageNumbersPanel values={values} onChange={onChange} />;
+      return <PdfPageNumbersPanel values={values} onChange={onChange} totalPages={0} />;
 
     case 'generic':
     default:
