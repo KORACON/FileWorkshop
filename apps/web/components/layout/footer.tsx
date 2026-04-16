@@ -22,7 +22,7 @@ const COLUMNS: FooterColumn[] = [
   {
     title: 'Инструменты',
     links: [
-      { label: 'Конвертация изображений', href: '/tools/images' },
+      { label: 'Конвертация изображений', href: '/image-convert' },
       { label: 'Сжатие файлов', href: '/tools/images' },
       { label: 'Работа с PDF', href: '/pdf-tools' },
       { label: 'Конвертация документов', href: '/tools/documents' },
