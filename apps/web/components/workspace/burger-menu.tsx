@@ -28,6 +28,14 @@ const CATEGORIES: MenuCategory[] = [
   { id: 'extra', label: 'Дополнительно', groups: ['extra'], expandDir: 'down' },
 ];
 
+const PDF_CATEGORIES: MenuCategory[] = [
+  { id: 'convert', label: 'Конвертировать PDF', groups: ['convert'], expandDir: 'right' },
+  { id: 'pdf-organize', label: 'Организовать PDF', groups: ['pdf-organize'], expandDir: 'down' },
+  { id: 'pdf-optimize', label: 'Оптимизация PDF', groups: ['pdf-optimize'], expandDir: 'down' },
+  { id: 'pdf-edit', label: 'Редактировать PDF', groups: ['pdf-edit'], expandDir: 'down' },
+  { id: 'pdf-protect', label: 'Защита PDF', groups: ['pdf-protect'], expandDir: 'down' },
+];
+
 function getActionLabel(action: CapabilityAction): string {
   if (action.group === 'convert' && action.targetFormat) {
     return action.targetFormat.toUpperCase();
@@ -80,7 +88,9 @@ export function BurgerMenu({ actions, currentAction, onSelect, file, fileInfo, o
     setExpandedDown((prev) => (prev === catId ? null : catId));
   };
 
-  const availableCategories = CATEGORIES.filter((cat) => categoryActions(cat.id).length > 0);
+  const isPdf = fileInfo?.family === 'pdf';
+  const menuCategories = isPdf ? PDF_CATEGORIES : CATEGORIES;
+  const availableCategories = menuCategories.filter((cat) => categoryActions(cat.id).length > 0);
 
   return (
     <>
