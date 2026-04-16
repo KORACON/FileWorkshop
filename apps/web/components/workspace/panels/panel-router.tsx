@@ -26,6 +26,7 @@ interface Props {
   removeBgActions?: RemoveBgActions;
   showOriginal?: boolean;
   onToggleOriginal?: () => void;
+  pdfTotalPages?: number;
 }
 
 export function PanelRouter(props: Props) {
@@ -57,7 +58,7 @@ export function PanelRouter(props: Props) {
       return <InstantPanel description={action.description} />;
 
     case 'pdf-page-numbers':
-      return <PdfPageNumbersPanel values={values} onChange={onChange} totalPages={0} />;
+      return <PdfPageNumbersPanel values={values} onChange={onChange} totalPages={props.pdfTotalPages || 0} />;
 
     case 'generic':
     default:

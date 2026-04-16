@@ -79,6 +79,7 @@ export function WorkspaceShell() {
 
   const isPdfPageNumbers = ws.state === 'editing' && ws.selectedAction?.uiPanel === 'pdf-page-numbers';
   const isPdfAction = ws.state === 'editing' && ws.fileFamily === 'pdf' && ws.selectedAction;
+  const [pdfTotalPages, setPdfTotalPages] = useState(0);
 
   // ── Process ──
   const handleProcess = useCallback(async () => {
@@ -165,6 +166,12 @@ export function WorkspaceShell() {
               position={ws.options.position}
               startNumber={parseInt(ws.options.startNumber || '1', 10)}
               format={ws.options.format}
+              onTotalPages={setPdfTotalPages}
+              fromPage={parseInt(ws.options.fromPage || '1', 10)}
+              toPage={parseInt(ws.options.toPage || '0', 10)}
+              margin={ws.options.margin}
+              pageMode={ws.options.pageMode}
+              firstPageTitle={ws.options.firstPageTitle === 'true'}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center p-6">
@@ -223,6 +230,7 @@ export function WorkspaceShell() {
                   removeBgActions={isRemovingBg ? removeBgActions : undefined}
                   showOriginal={showOriginal}
                   onToggleOriginal={() => setShowOriginal(!showOriginal)}
+                  pdfTotalPages={pdfTotalPages}
                 />
               </div>
 
