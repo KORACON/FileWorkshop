@@ -62,24 +62,24 @@ const TOOLS: ToolCard[] = [
   ...imgConversions,
 
   // ═══ Обработка изображений ═══
-  { id: 'img-resize', actionId: 'resize', name: 'Изменить размер', description: 'Измените ширину и высоту изображения с точностью до пикселя', category: 'img-edit', from: 'jpg png webp', to: '' },
-  { id: 'img-compress', actionId: 'compress', name: 'Сжать изображение', description: 'Уменьшите размер файла с контролем качества', category: 'img-edit', from: 'jpg png webp', to: '' },
-  { id: 'img-remove-bg', actionId: 'remove-bg', name: 'Убрать фон', description: 'Удалите задний фон с изображения с ручной дочисткой кистью', category: 'img-edit', from: 'jpg png webp avif', to: 'png' },
-  { id: 'img-crop', actionId: 'crop', name: 'Обрезать изображение', description: 'Обрежьте края изображения по заданным координатам', category: 'img-edit', from: 'jpg png webp', to: '' },
-  { id: 'img-exif', actionId: 'remove-exif', name: 'Удалить EXIF', description: 'Убрать метаданные: GPS, камеру, дату съёмки', category: 'img-edit', from: 'jpg png webp tiff', to: '' },
+  { id: 'img-resize', actionId: 'resize', name: 'Изменить размер', description: 'Измените ширину и высоту изображения с точностью до пикселя. Поддержка единиц: px, мм, см, дюймы. Сохранение пропорций.', category: 'img-edit', from: 'jpg png webp', to: '' },
+  { id: 'img-compress', actionId: 'compress', name: 'Сжать изображение', description: 'Уменьшите размер файла с контролем качества. Настраиваемый ползунок от 1 до 100. Экономия до 80% без видимых потерь.', category: 'img-edit', from: 'jpg png webp', to: '' },
+  { id: 'img-remove-bg', actionId: 'remove-bg', name: 'Убрать фон', description: 'Автоматическое удаление фона с ручной дочисткой кистью. Режимы стирания и восстановления. Результат в PNG с прозрачностью.', category: 'img-edit', from: 'jpg png webp avif', to: 'png' },
+  { id: 'img-crop', actionId: 'crop', name: 'Обрезать изображение', description: 'Обрежьте края изображения по заданным координатам. Укажите отступы слева, сверху, ширину и высоту области.', category: 'img-edit', from: 'jpg png webp', to: '' },
+  { id: 'img-exif', actionId: 'remove-exif', name: 'Удалить EXIF', description: 'Очистите метаданные: GPS-координаты, модель камеры, дату съёмки, настройки экспозиции. Защита приватности.', category: 'img-edit', from: 'jpg png webp tiff', to: '' },
 
   // ═══ PDF — Организовать ═══
-  { id: 'pdf-merge', actionId: 'pdf-merge', name: 'Объединить PDF', description: 'Соедините несколько PDF-файлов в один документ', category: 'pdf-organize', from: 'pdf', to: 'pdf' },
-  { id: 'pdf-split', actionId: 'pdf-split', name: 'Разделить PDF', description: 'Разбейте PDF на отдельные файлы по страницам', category: 'pdf-organize', from: 'pdf', to: 'pdf' },
-  { id: 'pdf-delete', actionId: 'pdf-delete-pages', name: 'Удалить страницы', description: 'Удалите выбранные страницы из PDF-документа', category: 'pdf-organize', from: 'pdf', to: 'pdf' },
-  { id: 'pdf-extract-img', actionId: 'pdf-extract-images', name: 'Извлечь изображения', description: 'Достаньте все картинки из PDF-файла', category: 'pdf-organize', from: 'pdf', to: 'jpg png' },
-  { id: 'pdf-reorder', actionId: 'pdf-reorder', name: 'Организовать PDF', description: 'Измените порядок страниц в документе', category: 'pdf-organize', from: 'pdf', to: 'pdf' },
-  { id: 'pdf-scan', actionId: 'pdf-scan', name: 'Сканировать в PDF', description: 'Создайте PDF из отсканированных изображений', category: 'pdf-organize', from: 'jpg png', to: 'pdf' },
+  { id: 'pdf-merge', actionId: 'pdf-merge', name: 'Объединить PDF', description: 'Соедините несколько PDF-файлов в один документ. Расположите в нужном порядке и получите единый файл.', category: 'pdf-organize', from: 'pdf', to: 'pdf' },
+  { id: 'pdf-split', actionId: 'pdf-split', name: 'Разделить PDF', description: 'Разбейте PDF на отдельные файлы. Каждая страница или диапазон страниц станет отдельным документом.', category: 'pdf-organize', from: 'pdf', to: 'pdf' },
+  { id: 'pdf-delete', actionId: 'pdf-delete-pages', name: 'Удалить страницы', description: 'Удалите выбранные страницы из PDF. Укажите номера страниц, которые нужно убрать из документа.', category: 'pdf-organize', from: 'pdf', to: 'pdf' },
+  { id: 'pdf-extract-img', actionId: 'pdf-extract-images', name: 'Извлечь изображения', description: 'Достаньте все картинки из PDF в оригинальном качестве. Каждое изображение сохраняется отдельным файлом.', category: 'pdf-organize', from: 'pdf', to: 'jpg png' },
+  { id: 'pdf-reorder', actionId: 'pdf-reorder', name: 'Организовать PDF', description: 'Измените порядок страниц в документе. Перетащите страницы в нужную последовательность.', category: 'pdf-organize', from: 'pdf', to: 'pdf' },
+  { id: 'pdf-scan', actionId: 'pdf-scan', name: 'Сканировать в PDF', description: 'Создайте PDF из отсканированных изображений. Объедините сканы в один структурированный документ.', category: 'pdf-organize', from: 'jpg png', to: 'pdf' },
 
   // ═══ PDF — Оптимизация ═══
-  { id: 'pdf-compress', actionId: 'pdf-compress', name: 'Сжать PDF', description: 'Уменьшите размер PDF без заметной потери качества', category: 'pdf-optimize', from: 'pdf', to: 'pdf' },
-  { id: 'pdf-repair', actionId: 'pdf-repair', name: 'Восстановить PDF', description: 'Исправьте повреждённый PDF-файл', category: 'pdf-optimize', from: 'pdf', to: 'pdf' },
-  { id: 'pdf-ocr', actionId: 'pdf-ocr', name: 'OCR PDF', description: 'Распознайте текст на отсканированных страницах', category: 'pdf-optimize', from: 'pdf', to: 'pdf' },
+  { id: 'pdf-compress', actionId: 'pdf-compress', name: 'Сжать PDF', description: 'Уменьшите размер PDF без потери качества. Три режима: экран (72 dpi), баланс (150 dpi), печать (300 dpi).', category: 'pdf-optimize', from: 'pdf', to: 'pdf' },
+  { id: 'pdf-repair', actionId: 'pdf-repair', name: 'Восстановить PDF', description: 'Исправьте повреждённый PDF-файл. Система анализирует структуру документа и пересобирает его.', category: 'pdf-optimize', from: 'pdf', to: 'pdf' },
+  { id: 'pdf-ocr', actionId: 'pdf-ocr', name: 'OCR PDF', description: 'Распознайте текст на сканированных страницах. Поддержка русского, английского и немецкого языков.', category: 'pdf-optimize', from: 'pdf', to: 'pdf' },
 
   // ═══ PDF — Конвертировать ═══
   { id: 'pdf-to-word', actionId: 'pdf-to-docx', name: 'PDF в Word', description: 'Конвертируйте PDF в редактируемый документ DOCX', category: 'pdf-convert', from: 'pdf', to: 'docx' },
@@ -182,42 +182,41 @@ export default function ToolsPage() {
           })}
         </div>
 
-        {/* Tool cards — full width grid, 5-6 columns */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+        {/* Tool cards — full width grid, 5 columns */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {filtered.map((tool) => {
+            const fromFmts = tool.from.split(' ').filter(Boolean);
+            const toFmts = tool.to.split(' ').filter(Boolean);
+            const isConversion = toFmts.length > 0 && fromFmts[0] !== toFmts[0];
             return (
               <button key={tool.id} onClick={() => router.push(`/tool/${tool.id}`)}
                 className={cn(
-                  'bg-surface rounded-card border p-5 text-left flex flex-col gap-3 min-h-[180px]',
+                  'bg-surface rounded-card border p-5 text-left flex flex-col gap-3 min-h-[220px]',
                   'hover:shadow-card-hover hover:border-border-strong hover:-translate-y-1',
-                  'transition-all duration-200 cursor-pointer',
-                  'border-border',
+                  'transition-all duration-200 cursor-pointer border-border',
                 )}>
-                {/* Icon — SVG, no background */}
                 <CatIcon category={tool.category} />
-
-                {/* Title */}
-                <h3 className="text-small font-semibold text-txt-strong leading-snug">{tool.name}</h3>
-
-                {/* Description */}
-                <p className="text-micro text-txt-muted leading-relaxed flex-1">{tool.description}</p>
+                <h3 className="text-body font-semibold text-txt-strong leading-snug">{tool.name}</h3>
+                <p className="text-small text-txt-muted leading-relaxed flex-1">{tool.description}</p>
 
                 {/* Format badges */}
-                {(tool.from || tool.to) && (
-                  <div className="flex items-center gap-1 flex-wrap">
-                    {tool.from.split(' ').filter(Boolean).slice(0, 2).map((f) => (
-                      <span key={f} className="text-micro text-txt-faint bg-bg-soft px-1.5 py-0.5 rounded">{f}</span>
-                    ))}
-                    {tool.to && (
-                      <>
-                        <span className="text-txt-faint text-micro">→</span>
-                        {tool.to.split(' ').filter(Boolean).slice(0, 1).map((t) => (
-                          <span key={t} className="text-micro text-accent bg-accent-50 px-1.5 py-0.5 rounded font-medium">{t}</span>
-                        ))}
-                      </>
-                    )}
-                  </div>
-                )}
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {isConversion ? (
+                    <>
+                      {fromFmts.slice(0, 2).map((f) => (
+                        <span key={f} className="text-micro text-txt-faint bg-bg-soft px-2 py-0.5 rounded">{f}</span>
+                      ))}
+                      <span className="text-txt-faint text-micro">→</span>
+                      {toFmts.slice(0, 1).map((t) => (
+                        <span key={t} className="text-micro text-accent bg-accent-50 px-2 py-0.5 rounded font-medium">{t}</span>
+                      ))}
+                    </>
+                  ) : (
+                    fromFmts.slice(0, 3).map((f) => (
+                      <span key={f} className="text-micro text-txt-muted bg-bg-soft px-2 py-0.5 rounded">{f}</span>
+                    ))
+                  )}
+                </div>
               </button>
             );
           })}
