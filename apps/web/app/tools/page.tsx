@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useWorkspaceStore } from '@/stores/workspace-store';
-import { getActionById } from '@/lib/capability-registry';
 import { Footer } from '@/components/layout/footer';
 
 interface ToolCard {
@@ -13,150 +11,165 @@ interface ToolCard {
   name: string;
   description: string;
   category: string;
-  accepts: string[];
-  color: string;
+  formats: string[];
 }
 
 const CATEGORIES = [
   { id: 'all', label: 'Все' },
+  { id: 'img-convert', label: 'Конвертация изображений' },
+  { id: 'img-edit', label: 'Редактирование изображений' },
   { id: 'pdf-organize', label: 'Организовать PDF' },
   { id: 'pdf-optimize', label: 'Оптимизация PDF' },
   { id: 'pdf-convert', label: 'Конвертировать PDF' },
   { id: 'pdf-edit', label: 'Редактировать PDF' },
   { id: 'pdf-protect', label: 'Защита PDF' },
-  { id: 'images', label: 'Изображения' },
-  { id: 'documents', label: 'Документы' },
+  { id: 'doc-convert', label: 'Документы' },
 ];
 
+// Helper to generate image conversion cards
+function imgConv(from: string, to: string, actionId: string): ToolCard {
+  return {
+    id: `${from.toLowerCase()}-to-${to.toLowerCase()}`,
+    actionId,
+    name: `${from} в ${to}`,
+    description: `Конвертировать ${from} в ${to}`,
+    category: 'img-convert',
+    formats: [from.toLowerCase(), to.toLowerCase()],
+  };
+}
+
 const TOOLS: ToolCard[] = [
-  // PDF — Организовать
-  { id: 'merge', actionId: 'pdf-merge', name: 'Объединить PDF', description: 'Объедините несколько PDF-файлов и упорядочьте их в любом порядке', category: 'pdf-organize', accepts: ['pdf'], color: 'text-orange-500' },
-  { id: 'split', actionId: 'pdf-split', name: 'Разделить PDF', description: 'Выбирайте диапазон страниц или преобразовывайте каждую страницу в отдельный PDF', category: 'pdf-organize', accepts: ['pdf'], color: 'text-orange-500' },
-  { id: 'delete-pages', actionId: 'pdf-delete-pages', name: 'Удалить страницы', description: 'Удалите ненужные страницы из PDF-документа', category: 'pdf-organize', accepts: ['pdf'], color: 'text-orange-500' },
-  { id: 'extract-images', actionId: 'pdf-extract-images', name: 'Извлечь изображения', description: 'Извлеките все изображения из PDF-файла', category: 'pdf-organize', accepts: ['pdf'], color: 'text-orange-500' },
-  { id: 'reorder', actionId: 'pdf-reorder', name: 'Организовать PDF', description: 'Измените порядок страниц в PDF-документе', category: 'pdf-organize', accepts: ['pdf'], color: 'text-orange-500' },
-  // PDF — Оптимизация
-  { id: 'compress', actionId: 'pdf-compress', name: 'Сжать PDF', description: 'Уменьшите размер PDF-файла, сохранив качество', category: 'pdf-optimize', accepts: ['pdf'], color: 'text-green-600' },
-  { id: 'repair', actionId: 'pdf-repair', name: 'Восстановить PDF', description: 'Попробуйте исправить повреждённый PDF-файл', category: 'pdf-optimize', accepts: ['pdf'], color: 'text-green-600' },
-  { id: 'ocr', actionId: 'pdf-ocr', name: 'OCR PDF', description: 'Распознайте текст на отсканированных страницах PDF', category: 'pdf-optimize', accepts: ['pdf'], color: 'text-green-600' },
-  // PDF — Конвертировать
-  { id: 'pdf-to-word', actionId: 'pdf-to-docx', name: 'PDF в Word', description: 'Конвертируйте PDF в редактируемый документ DOCX', category: 'pdf-convert', accepts: ['pdf'], color: 'text-blue-600' },
-  { id: 'pdf-to-ppt', actionId: 'pdf-to-pptx', name: 'PDF в PowerPoint', description: 'Конвертируйте PDF-презентацию в формат PPTX', category: 'pdf-convert', accepts: ['pdf'], color: 'text-blue-600' },
-  { id: 'pdf-to-excel', actionId: 'pdf-to-xlsx', name: 'PDF в Excel', description: 'Извлеките таблицы из PDF в формат XLSX', category: 'pdf-convert', accepts: ['pdf'], color: 'text-blue-600' },
-  { id: 'pdf-to-jpg', actionId: 'pdf-to-images', name: 'PDF в JPG', description: 'Конвертируйте страницы PDF в изображения', category: 'pdf-convert', accepts: ['pdf'], color: 'text-blue-600' },
-  { id: 'pdf-to-html', actionId: 'pdf-to-html', name: 'PDF в HTML', description: 'Преобразуйте PDF в HTML-страницу', category: 'pdf-convert', accepts: ['pdf'], color: 'text-blue-600' },
-  { id: 'doc-to-pdf', actionId: 'doc-to-pdf', name: 'Word в PDF', description: 'Конвертируйте документы DOCX и DOC в PDF', category: 'pdf-convert', accepts: ['docx','doc','odt','rtf','txt'], color: 'text-blue-600' },
-  { id: 'jpg-to-pdf', actionId: 'images-to-pdf', name: 'JPG в PDF', description: 'Конвертируйте изображения в формат PDF', category: 'pdf-convert', accepts: ['jpg','jpeg','png','webp','bmp','tiff'], color: 'text-blue-600' },
-  { id: 'html-to-pdf', actionId: 'doc-to-pdf', name: 'HTML в PDF', description: 'Преобразуйте HTML-страницу в PDF-документ', category: 'pdf-convert', accepts: ['html','htm'], color: 'text-blue-600' },
-  // PDF — Редактировать
-  { id: 'rotate', actionId: 'pdf-rotate', name: 'Повернуть PDF', description: 'Поверните страницы PDF на 90°, 180° или 270°', category: 'pdf-edit', accepts: ['pdf'], color: 'text-purple-600' },
-  { id: 'page-numbers', actionId: 'pdf-page-numbers', name: 'Номера страниц', description: 'Добавьте номера на страницы PDF-документа', category: 'pdf-edit', accepts: ['pdf'], color: 'text-purple-600' },
-  { id: 'watermark', actionId: 'pdf-watermark', name: 'Водяной знак', description: 'Наложите текстовый водяной знак на PDF', category: 'pdf-edit', accepts: ['pdf'], color: 'text-purple-600' },
-  { id: 'crop-pdf', actionId: 'pdf-crop', name: 'Обрезка PDF', description: 'Обрежьте поля страниц PDF-документа', category: 'pdf-edit', accepts: ['pdf'], color: 'text-purple-600' },
-  { id: 'annotate', actionId: 'pdf-annotate', name: 'Редактировать PDF', description: 'Добавьте текст и аннотации к PDF', category: 'pdf-edit', accepts: ['pdf'], color: 'text-purple-600' },
-  // PDF — Защита
-  { id: 'unlock', actionId: 'pdf-unlock', name: 'Открыть PDF', description: 'Снимите пароль с защищённого PDF', category: 'pdf-protect', accepts: ['pdf'], color: 'text-sky-700' },
-  { id: 'protect', actionId: 'pdf-protect', name: 'Защита PDF', description: 'Установите пароль на PDF-документ', category: 'pdf-protect', accepts: ['pdf'], color: 'text-sky-700' },
-  { id: 'sign', actionId: 'pdf-sign', name: 'Подписать PDF', description: 'Добавьте электронную подпись к PDF', category: 'pdf-protect', accepts: ['pdf'], color: 'text-sky-700' },
-  { id: 'redact', actionId: 'pdf-redact', name: 'Скрыть данные', description: 'Замажьте конфиденциальную информацию в PDF', category: 'pdf-protect', accepts: ['pdf'], color: 'text-sky-700' },
-  { id: 'remove-meta', actionId: 'pdf-remove-meta', name: 'Удалить метаданные', description: 'Очистите автора, заголовок и теги из PDF', category: 'pdf-protect', accepts: ['pdf'], color: 'text-sky-700' },
-  // Изображения
-  { id: 'img-resize', actionId: 'resize', name: 'Изменить размер', description: 'Измените ширину и высоту изображения', category: 'images', accepts: ['jpg','jpeg','png','webp','avif','bmp','tiff'], color: 'text-amber-600' },
-  { id: 'img-compress', actionId: 'compress', name: 'Сжать изображение', description: 'Уменьшите размер файла с контролем качества', category: 'images', accepts: ['jpg','jpeg','png','webp'], color: 'text-amber-600' },
-  { id: 'img-remove-bg', actionId: 'remove-bg', name: 'Убрать фон', description: 'Удалите задний фон с изображения', category: 'images', accepts: ['jpg','jpeg','png','webp','avif','bmp','tiff','heic','heif','gif'], color: 'text-amber-600' },
-  { id: 'img-to-png', actionId: 'to-png', name: 'В PNG', description: 'Конвертируйте изображение в PNG', category: 'images', accepts: ['jpg','jpeg','webp','avif','bmp','tiff','heic','heif','gif','ico','svg'], color: 'text-amber-600' },
-  { id: 'img-to-jpg', actionId: 'to-jpg', name: 'В JPG', description: 'Конвертируйте изображение в JPG', category: 'images', accepts: ['png','webp','avif','bmp','tiff','heic','heif','gif','ico','svg'], color: 'text-amber-600' },
-  { id: 'img-to-webp', actionId: 'to-webp', name: 'В WEBP', description: 'Конвертируйте изображение в WEBP', category: 'images', accepts: ['jpg','jpeg','png','avif','bmp','tiff','heic','heif','gif'], color: 'text-amber-600' },
-  // Документы
-  { id: 'doc-to-txt', actionId: 'doc-to-txt', name: 'В TXT', description: 'Извлеките текст из документа', category: 'documents', accepts: ['docx','doc','odt','rtf','pdf','html','htm'], color: 'text-teal-600' },
-  { id: 'doc-to-docx', actionId: 'doc-to-docx', name: 'В DOCX', description: 'Конвертируйте документ в формат Word', category: 'documents', accepts: ['doc','odt','rtf','txt','html','htm','md','pdf'], color: 'text-teal-600' },
-  { id: 'md-to-html', actionId: 'md-to-html', name: 'Markdown → HTML', description: 'Конвертируйте Markdown в HTML', category: 'documents', accepts: ['md'], color: 'text-teal-600' },
+  // ═══ Конвертация изображений ═══
+  imgConv('JPG', 'PNG', 'to-png'), imgConv('JPG', 'WEBP', 'to-webp'), imgConv('JPG', 'AVIF', 'to-avif'),
+  imgConv('JPG', 'GIF', 'to-gif'), imgConv('JPG', 'TIFF', 'to-tiff'), imgConv('JPG', 'PDF', 'images-to-pdf'),
+  imgConv('PNG', 'JPG', 'to-jpg'), imgConv('PNG', 'WEBP', 'to-webp'), imgConv('PNG', 'AVIF', 'to-avif'),
+  imgConv('PNG', 'GIF', 'to-gif'), imgConv('PNG', 'TIFF', 'to-tiff'), imgConv('PNG', 'PDF', 'images-to-pdf'),
+  imgConv('WEBP', 'JPG', 'to-jpg'), imgConv('WEBP', 'PNG', 'to-png'), imgConv('WEBP', 'AVIF', 'to-avif'),
+  imgConv('WEBP', 'GIF', 'to-gif'), imgConv('WEBP', 'TIFF', 'to-tiff'),
+  imgConv('AVIF', 'JPG', 'to-jpg'), imgConv('AVIF', 'PNG', 'to-png'), imgConv('AVIF', 'WEBP', 'to-webp'),
+  imgConv('HEIC', 'JPG', 'to-jpg'), imgConv('HEIC', 'PNG', 'to-png'), imgConv('HEIC', 'WEBP', 'to-webp'),
+  imgConv('GIF', 'JPG', 'to-jpg'), imgConv('GIF', 'PNG', 'to-png'), imgConv('GIF', 'WEBP', 'to-webp'),
+  imgConv('BMP', 'JPG', 'to-jpg'), imgConv('BMP', 'PNG', 'to-png'), imgConv('BMP', 'WEBP', 'to-webp'),
+  imgConv('TIFF', 'JPG', 'to-jpg'), imgConv('TIFF', 'PNG', 'to-png'), imgConv('TIFF', 'WEBP', 'to-webp'),
+  imgConv('SVG', 'JPG', 'to-jpg'), imgConv('SVG', 'PNG', 'to-png'),
+  imgConv('ICO', 'JPG', 'to-jpg'), imgConv('ICO', 'PNG', 'to-png'),
+
+  // ═══ Редактирование изображений ═══
+  { id: 'img-resize', actionId: 'resize', name: 'Изменить размер', description: 'Измените ширину и высоту изображения с точностью до пикселя', category: 'img-edit', formats: ['jpg','png','webp','avif'] },
+  { id: 'img-compress', actionId: 'compress', name: 'Сжать изображение', description: 'Уменьшите размер файла с контролем качества', category: 'img-edit', formats: ['jpg','png','webp'] },
+  { id: 'img-remove-bg', actionId: 'remove-bg', name: 'Убрать фон', description: 'Удалите задний фон с изображения с ручной дочисткой', category: 'img-edit', formats: ['jpg','png','webp','avif'] },
+  { id: 'img-crop', actionId: 'crop', name: 'Обрезать изображение', description: 'Обрежьте края изображения', category: 'img-edit', formats: ['jpg','png','webp'] },
+  { id: 'img-exif', actionId: 'remove-exif', name: 'Удалить метаданные', description: 'Убрать EXIF, GPS, информацию о камере', category: 'img-edit', formats: ['jpg','png','webp','tiff'] },
+
+  // ═══ PDF — Организовать ═══
+  { id: 'pdf-merge', actionId: 'pdf-merge', name: 'Объединить PDF', description: 'Объедините несколько PDF-файлов в один документ', category: 'pdf-organize', formats: ['pdf'] },
+  { id: 'pdf-split', actionId: 'pdf-split', name: 'Разделить PDF', description: 'Разбейте PDF на отдельные файлы по страницам', category: 'pdf-organize', formats: ['pdf'] },
+  { id: 'pdf-delete', actionId: 'pdf-delete-pages', name: 'Удалить страницы', description: 'Удалите ненужные страницы из PDF', category: 'pdf-organize', formats: ['pdf'] },
+  { id: 'pdf-extract-img', actionId: 'pdf-extract-images', name: 'Извлечь изображения', description: 'Достаньте все картинки из PDF-файла', category: 'pdf-organize', formats: ['pdf'] },
+  { id: 'pdf-reorder', actionId: 'pdf-reorder', name: 'Организовать PDF', description: 'Измените порядок страниц в документе', category: 'pdf-organize', formats: ['pdf'] },
+  { id: 'pdf-scan', actionId: 'pdf-scan', name: 'Сканировать в PDF', description: 'Создайте PDF из отсканированных изображений', category: 'pdf-organize', formats: ['pdf'] },
+
+  // ═══ PDF — Оптимизация ═══
+  { id: 'pdf-compress', actionId: 'pdf-compress', name: 'Сжать PDF', description: 'Уменьшите размер PDF без потери качества', category: 'pdf-optimize', formats: ['pdf'] },
+  { id: 'pdf-repair', actionId: 'pdf-repair', name: 'Восстановить PDF', description: 'Исправьте повреждённый PDF-файл', category: 'pdf-optimize', formats: ['pdf'] },
+  { id: 'pdf-ocr', actionId: 'pdf-ocr', name: 'OCR PDF', description: 'Распознайте текст на сканированных страницах', category: 'pdf-optimize', formats: ['pdf'] },
+
+  // ═══ PDF — Конвертировать ═══
+  { id: 'pdf-to-word', actionId: 'pdf-to-docx', name: 'PDF в Word', description: 'Конвертируйте PDF в редактируемый DOCX', category: 'pdf-convert', formats: ['pdf','docx'] },
+  { id: 'pdf-to-ppt', actionId: 'pdf-to-pptx', name: 'PDF в PowerPoint', description: 'Конвертируйте PDF в презентацию PPTX', category: 'pdf-convert', formats: ['pdf','pptx'] },
+  { id: 'pdf-to-excel', actionId: 'pdf-to-xlsx', name: 'PDF в Excel', description: 'Извлеките таблицы из PDF в XLSX', category: 'pdf-convert', formats: ['pdf','xlsx'] },
+  { id: 'pdf-to-jpg', actionId: 'pdf-to-images', name: 'PDF в JPG', description: 'Конвертируйте страницы PDF в изображения', category: 'pdf-convert', formats: ['pdf','jpg'] },
+  { id: 'pdf-to-html', actionId: 'pdf-to-html', name: 'PDF в HTML', description: 'Преобразуйте PDF в HTML-страницу', category: 'pdf-convert', formats: ['pdf','html'] },
+  { id: 'pdf-to-txt', actionId: 'pdf-to-txt', name: 'PDF в TXT', description: 'Извлеките текст из PDF-документа', category: 'pdf-convert', formats: ['pdf','txt'] },
+  { id: 'word-to-pdf', actionId: 'doc-to-pdf', name: 'Word в PDF', description: 'Конвертируйте DOCX/DOC в PDF', category: 'pdf-convert', formats: ['docx','pdf'] },
+  { id: 'jpg-to-pdf', actionId: 'images-to-pdf', name: 'JPG в PDF', description: 'Соберите изображения в PDF-документ', category: 'pdf-convert', formats: ['jpg','pdf'] },
+  { id: 'ppt-to-pdf', actionId: 'doc-to-pdf', name: 'PowerPoint в PDF', description: 'Конвертируйте PPT/PPTX в PDF', category: 'pdf-convert', formats: ['pptx','pdf'] },
+  { id: 'excel-to-pdf', actionId: 'doc-to-pdf', name: 'Excel в PDF', description: 'Конвертируйте XLSX/XLS в PDF', category: 'pdf-convert', formats: ['xlsx','pdf'] },
+  { id: 'html-to-pdf', actionId: 'doc-to-pdf', name: 'HTML в PDF', description: 'Преобразуйте HTML-страницу в PDF', category: 'pdf-convert', formats: ['html','pdf'] },
+
+  // ═══ PDF — Редактировать ═══
+  { id: 'pdf-rotate', actionId: 'pdf-rotate', name: 'Повернуть PDF', description: 'Поверните страницы на 90°, 180° или 270°', category: 'pdf-edit', formats: ['pdf'] },
+  { id: 'pdf-numbers', actionId: 'pdf-page-numbers', name: 'Номера страниц', description: 'Добавьте номера на страницы PDF', category: 'pdf-edit', formats: ['pdf'] },
+  { id: 'pdf-watermark', actionId: 'pdf-watermark', name: 'Водяной знак', description: 'Наложите текстовый водяной знак', category: 'pdf-edit', formats: ['pdf'] },
+  { id: 'pdf-crop', actionId: 'pdf-crop', name: 'Обрезка PDF', description: 'Обрежьте поля страниц документа', category: 'pdf-edit', formats: ['pdf'] },
+  { id: 'pdf-annotate', actionId: 'pdf-annotate', name: 'Редактировать PDF', description: 'Добавьте текст и аннотации', category: 'pdf-edit', formats: ['pdf'] },
+
+  // ═══ PDF — Защита ═══
+  { id: 'pdf-unlock', actionId: 'pdf-unlock', name: 'Открыть PDF', description: 'Снимите пароль с защищённого PDF', category: 'pdf-protect', formats: ['pdf'] },
+  { id: 'pdf-protect', actionId: 'pdf-protect', name: 'Защита PDF', description: 'Установите пароль на PDF-документ', category: 'pdf-protect', formats: ['pdf'] },
+  { id: 'pdf-sign', actionId: 'pdf-sign', name: 'Подписать PDF', description: 'Добавьте электронную подпись', category: 'pdf-protect', formats: ['pdf'] },
+  { id: 'pdf-redact', actionId: 'pdf-redact', name: 'Скрыть данные', description: 'Замажьте конфиденциальную информацию', category: 'pdf-protect', formats: ['pdf'] },
+  { id: 'pdf-compare', actionId: 'pdf-compare', name: 'Сравнить PDF', description: 'Сравните два PDF-документа', category: 'pdf-protect', formats: ['pdf'] },
+  { id: 'pdf-meta', actionId: 'pdf-remove-meta', name: 'Удалить метаданные', description: 'Очистите автора, заголовок и теги', category: 'pdf-protect', formats: ['pdf'] },
+
+  // ═══ Документы ═══
+  { id: 'docx-to-pdf', actionId: 'doc-to-pdf', name: 'DOCX в PDF', description: 'Конвертируйте Word-документ в PDF', category: 'doc-convert', formats: ['docx','pdf'] },
+  { id: 'odt-to-pdf', actionId: 'doc-to-pdf', name: 'ODT в PDF', description: 'Конвертируйте LibreOffice документ в PDF', category: 'doc-convert', formats: ['odt','pdf'] },
+  { id: 'rtf-to-pdf', actionId: 'doc-to-pdf', name: 'RTF в PDF', description: 'Конвертируйте RTF в PDF', category: 'doc-convert', formats: ['rtf','pdf'] },
+  { id: 'txt-to-pdf', actionId: 'doc-to-pdf', name: 'TXT в PDF', description: 'Конвертируйте текстовый файл в PDF', category: 'doc-convert', formats: ['txt','pdf'] },
+  { id: 'md-to-html', actionId: 'md-to-html', name: 'Markdown в HTML', description: 'Конвертируйте Markdown в HTML', category: 'doc-convert', formats: ['md','html'] },
+  { id: 'html-to-md', actionId: 'html-to-md', name: 'HTML в Markdown', description: 'Конвертируйте HTML в Markdown', category: 'doc-convert', formats: ['html','md'] },
+  { id: 'docx-to-txt', actionId: 'doc-to-txt', name: 'DOCX в TXT', description: 'Извлеките текст из Word-документа', category: 'doc-convert', formats: ['docx','txt'] },
+  { id: 'docx-to-odt', actionId: 'doc-to-odt', name: 'DOCX в ODT', description: 'Конвертируйте Word в LibreOffice формат', category: 'doc-convert', formats: ['docx','odt'] },
+  { id: 'docx-to-rtf', actionId: 'doc-to-rtf', name: 'DOCX в RTF', description: 'Конвертируйте Word в RTF', category: 'doc-convert', formats: ['docx','rtf'] },
 ];
 
 export default function ToolsPage() {
   const [activeCategory, setActiveCategory] = useState('all');
   const router = useRouter();
-  const ws = useWorkspaceStore();
 
-  const filtered = activeCategory === 'all'
-    ? TOOLS
-    : TOOLS.filter((t) => t.category === activeCategory);
-
-  const handleToolClick = (tool: ToolCard) => {
-    // Navigate to tool-specific page
-    router.push(`/tool/${tool.id}`);
-  };
+  const filtered = activeCategory === 'all' ? TOOLS : TOOLS.filter((t) => t.category === activeCategory);
 
   return (
     <div className="bg-bg min-h-screen">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10">
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-hero font-display text-txt-strong mb-3">Инструменты</h1>
           <p className="text-body text-txt-muted max-w-xl mx-auto">
-            Все инструменты для работы с PDF, изображениями и документами в одном месте.
+            Все инструменты для работы с PDF, изображениями и документами. Выберите нужный и загрузите файл.
           </p>
         </div>
 
         {/* Category tabs */}
         <div className="flex flex-wrap justify-center gap-2 mb-8">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              className={cn(
-                'px-4 py-2 rounded-button text-small font-medium transition-all duration-150',
-                activeCategory === cat.id
-                  ? 'bg-accent text-white shadow-button'
-                  : 'bg-surface border border-border text-txt-muted hover:text-txt-base hover:border-border-strong',
-              )}
-            >
-              {cat.label}
+          {CATEGORIES.map((cat) => {
+            const count = cat.id === 'all' ? TOOLS.length : TOOLS.filter((t) => t.category === cat.id).length;
+            return (
+              <button key={cat.id} onClick={() => setActiveCategory(cat.id)}
+                className={cn(
+                  'px-3 py-1.5 rounded-button text-small font-medium transition-all duration-150',
+                  activeCategory === cat.id
+                    ? 'bg-accent text-white shadow-button'
+                    : 'bg-surface border border-border text-txt-muted hover:text-txt-base hover:border-border-strong',
+                )}>
+                {cat.label} <span className="text-micro opacity-70 ml-1">{count}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Tool cards */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+          {filtered.map((tool) => (
+            <button key={tool.id} onClick={() => router.push(`/tool/${tool.id}`)}
+              className="card-interactive p-4 text-left flex flex-col gap-2">
+              <h3 className="text-small font-semibold text-txt-strong">{tool.name}</h3>
+              <p className="text-micro text-txt-muted leading-relaxed flex-1">{tool.description}</p>
+              <div className="flex flex-wrap gap-1 mt-1">
+                {tool.formats.map((f) => (
+                  <span key={f} className="badge badge-neutral text-micro">{f}</span>
+                ))}
+              </div>
             </button>
           ))}
         </div>
 
-        {/* Tool cards grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {filtered.map((tool) => (
-            <button
-              key={tool.id}
-              onClick={() => handleToolClick(tool)}
-              className="card-interactive p-5 text-left flex flex-col gap-3"
-            >
-              <div className={cn('text-2xl', tool.color)}>
-                <ToolIcon category={tool.category} />
-              </div>
-              <div>
-                <h3 className="text-h3 text-txt-strong mb-1">{tool.name}</h3>
-                <p className="text-micro text-txt-muted leading-relaxed">{tool.description}</p>
-              </div>
-              <div className="flex flex-wrap gap-1 mt-auto">
-                {tool.accepts.slice(0, 4).map((ext) => (
-                  <span key={ext} className="badge badge-neutral text-micro">{ext}</span>
-                ))}
-                {tool.accepts.length > 4 && (
-                  <span className="badge badge-neutral text-micro">+{tool.accepts.length - 4}</span>
-                )}
-              </div>
-            </button>
-          ))}
-        </div>
+        {/* Count */}
+        <p className="text-center text-caption text-txt-faint mt-6">
+          {filtered.length} {filtered.length === 1 ? 'инструмент' : 'инструментов'}
+        </p>
       </div>
       <Footer />
     </div>
   );
-}
-
-function ToolIcon({ category }: { category: string }) {
-  switch (category) {
-    case 'pdf-organize': return <span>📑</span>;
-    case 'pdf-optimize': return <span>⚡</span>;
-    case 'pdf-convert': return <span>🔄</span>;
-    case 'pdf-edit': return <span>✏️</span>;
-    case 'pdf-protect': return <span>🔒</span>;
-    case 'images': return <span>🖼</span>;
-    case 'documents': return <span>📝</span>;
-    default: return <span>📎</span>;
-  }
 }
