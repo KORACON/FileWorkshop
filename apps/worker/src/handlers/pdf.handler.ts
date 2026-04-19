@@ -309,12 +309,11 @@ async function pdfRotate(ctx: JobContext): Promise<JobResult> {
 // ──────────────────────────────────────────────
 
 /**
- * Сжимает PDF гарантированно до нужного процента.
- * Рендерит страницы в JPEG с нужным качеством, собирает обратно в PDF.
+ * Сжимает PDF через Ghostscript.
+ * Всегда использует результат GS. Если GS увеличил файл — возвращает оригинал.
  */
 async function pdfCompress(ctx: JobContext): Promise<JobResult> {
   const { PDFDocument } = require('pdf-lib');
-  const sharp = require('sharp');
   const { job, options, storageDirs } = ctx;
 
   const inputPath = join(storageDirs.original, basename(job.storedOriginalPath));
@@ -322,33 +321,29 @@ async function pdfCompress(ctx: JobContext): Promise<JobResult> {
   const originalSize = pdfBytes.length;
 
   const quality = options.quality || 'ebook';
-  // Target: screen=25%, ebook=50%, printer=75% of original
-  const targetRatio = quality === 'screen' ? 0.25 : quality === 'printer' ? 0.75 : 0.50;
-  const jpegQuality = quality === 'screen' ? 20 : quality === 'printer' ? 70 : 40;
   const dpi = quality === 'screen' ? 72 : quality === 'printer' ? 200 : 120;
 
-  // First try Ghostscript
-  const gsOutputName = `${randomUUID()}_gs.pdf`;
-  const gsOutputPath = join(storageDirs.processed, gsOutputName);
-  let gsWorked = false;
+  const gsOutputPath = join(storageDirs.processed, `${randomUUID()}.pdf`);
 
   const gsPaths = [
     'C:\\Program Files\\gs\\gs10.04.0\\bin\\gswin64c.exe',
     'gswin64c', 'gs',
   ];
 
+  let gsWorked = false;
   for (const gsPath of gsPaths) {
     try {
       await execFileAsync(gsPath, [
         '-sDEVICE=pdfwrite',
         `-dPDFSETTINGS=/${quality === 'printer' ? 'printer' : quality}`,
         '-dNOPAUSE', '-dBATCH', '-dQUIET',
-        '-dCompatibilityLevel=1.5',
+        '-dCompatibilityLevel=1.4',
         `-dColorImageResolution=${dpi}`,
         `-dGrayImageResolution=${dpi}`,
         `-dMonoImageResolution=${dpi * 2}`,
         '-dDownsampleColorImages=true',
         '-dDownsampleGrayImages=true',
+        '-dDownsampleMonoImages=true',
         '-dColorImageDownsampleType=/Bicubic',
         '-dGrayImageDownsampleType=/Bicubic',
         `-sOutputFile=${gsOutputPath}`,
@@ -363,92 +358,46 @@ async function pdfCompress(ctx: JobContext): Promise<JobResult> {
 
   if (gsWorked) {
     const gsStat = await stat(gsOutputPath);
-    const gsRatio = gsStat.size / originalSize;
 
-    // If Ghostscript achieved target or close enough, use it
-    if (gsRatio <= targetRatio + 0.05) {
-      const finalName = `${randomUUID()}.pdf`;
-      const finalPath = join(storageDirs.processed, finalName);
-      const { rename } = require('fs/promises');
-      await rename(gsOutputPath, finalPath);
+    // If GS result is smaller — use it
+    if (gsStat.size < originalSize) {
       return {
         outputFilename: `compressed_${randomUUID().slice(0, 8)}.pdf`,
-        storedOutputPath: finalPath,
+        storedOutputPath: gsOutputPath,
         fileSizeAfter: gsStat.size,
       };
     }
 
-    // Ghostscript didn't compress enough — try harder with image-based approach
+    // GS made it bigger — delete and use pdf-lib fallback
     try { await rm(gsOutputPath); } catch {}
   }
 
-  // Fallback: render pages as JPEG images and rebuild PDF
-  // This guarantees the target size by controlling JPEG quality
-  const sourcePdf = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
-  const pageCount = sourcePdf.getPageCount();
-  const newPdf = await PDFDocument.create();
+  // Fallback: pdf-lib re-save with object stream compression
+  const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+  if (quality === 'screen') {
+    pdfDoc.setTitle(''); pdfDoc.setAuthor(''); pdfDoc.setSubject('');
+    pdfDoc.setKeywords([]); pdfDoc.setProducer(''); pdfDoc.setCreator('');
+  }
+  const outputBytes = await pdfDoc.save({ useObjectStreams: true });
 
-  for (let i = 0; i < pageCount; i++) {
-    const page = sourcePdf.getPages()[i];
-    const { width, height } = page.getSize();
+  const outputPath = join(storageDirs.processed, `${randomUUID()}.pdf`);
 
-    // Create a temporary single-page PDF
-    const tempPdf = await PDFDocument.create();
-    const [copiedPage] = await tempPdf.copyPages(sourcePdf, [i]);
-    tempPdf.addPage(copiedPage);
-    const tempBytes = await tempPdf.save();
-
-    // Try to render with poppler (pdftoppm)
-    const tempInputPath = join(storageDirs.processed, `${randomUUID()}_temp.pdf`);
-    const tempImgPath = join(storageDirs.processed, `${randomUUID()}_page`);
-    await writeFile(tempInputPath, tempBytes);
-
-    let imgBuffer: Buffer | null = null;
-
-    try {
-      // Use pdftoppm if available
-      await execFileAsync('pdftoppm', [
-        '-jpeg', '-jpegopt', `quality=${jpegQuality}`,
-        '-r', String(dpi),
-        '-singlefile',
-        tempInputPath, tempImgPath,
-      ], { timeout: 30000 });
-
-      const jpgPath = `${tempImgPath}.jpg`;
-      imgBuffer = await readFile(jpgPath);
-      try { await rm(jpgPath); } catch {}
-    } catch {
-      // pdftoppm not available — use sharp to create a placeholder
-      // Just copy the page as-is
-    }
-
-    try { await rm(tempInputPath); } catch {}
-
-    if (imgBuffer) {
-      // Compress further with sharp if needed
-      const compressed = await sharp(imgBuffer)
-        .jpeg({ quality: jpegQuality, mozjpeg: true })
-        .toBuffer();
-
-      const jpgImage = await newPdf.embedJpg(compressed);
-      const newPage = newPdf.addPage([width, height]);
-      newPage.drawImage(jpgImage, { x: 0, y: 0, width, height });
-    } else {
-      // Fallback: copy page as-is
-      const [copiedPage] = await newPdf.copyPages(sourcePdf, [i]);
-      newPdf.addPage(copiedPage);
-    }
+  // Only use pdf-lib result if it's smaller
+  if (outputBytes.length < originalSize) {
+    await writeFile(outputPath, outputBytes);
+    return {
+      outputFilename: `compressed_${randomUUID().slice(0, 8)}.pdf`,
+      storedOutputPath: outputPath,
+      fileSizeAfter: outputBytes.length,
+    };
   }
 
-  const outputBytes = await newPdf.save({ useObjectStreams: true });
-  const outputName = `${randomUUID()}.pdf`;
-  const outputPath = join(storageDirs.processed, outputName);
-  await writeFile(outputPath, outputBytes);
-
+  // Nothing helped — return original as-is
+  await writeFile(outputPath, pdfBytes);
   return {
     outputFilename: `compressed_${randomUUID().slice(0, 8)}.pdf`,
     storedOutputPath: outputPath,
-    fileSizeAfter: outputBytes.length,
+    fileSizeAfter: originalSize,
   };
 }
 
