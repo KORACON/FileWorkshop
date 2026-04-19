@@ -84,6 +84,25 @@ export class HandlerRegistry {
     this.register('pdf.from_images', handlePdfOperation);
     this.register('pdf.remove_metadata', handlePdfOperation);
     this.register('pdf.reorder', handlePdfOperation);
+    this.register('pdf.add_page_numbers', handlePdfOperation);
+    this.register('pdf.delete_pages', handlePdfOperation);
+    this.register('pdf.watermark', handlePdfOperation);
+    this.register('pdf.crop', handlePdfOperation);
+    this.register('pdf.protect', handlePdfOperation);
+    this.register('pdf.unlock', handlePdfOperation);
+    this.register('pdf.sign', handlePdfOperation);
+    this.register('pdf.redact', handlePdfOperation);
+    this.register('pdf.compare', handlePdfOperation);
+    this.register('pdf.annotate', handlePdfOperation);
+    this.register('pdf.repair', handlePdfOperation);
+    this.register('pdf.ocr', handlePdfOperation);
+    this.register('pdf.extract_images', handlePdfOperation);
+    this.register('pdf.scan', handlePdfOperation);
+    this.register('pdf.to_text', handlePdfOperation);
+    this.register('pdf.to_docx', handlePdfOperation);
+    this.register('pdf.to_pptx', handlePdfOperation);
+    this.register('pdf.to_xlsx', handlePdfOperation);
+    this.register('pdf.to_html', handlePdfOperation);
 
     // ── Документы ──
     const { handleDocConvert } = require('./handlers/document.handler');

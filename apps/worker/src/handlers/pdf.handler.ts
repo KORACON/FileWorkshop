@@ -53,6 +53,25 @@ export async function handlePdfOperation(ctx: JobContext): Promise<JobResult> {
     case 'pdf.to_images':       return pdfToImages(ctx);
     case 'pdf.remove_metadata': return pdfRemoveMetadata(ctx);
     case 'pdf.reorder':         return pdfReorder(ctx);
+    case 'pdf.add_page_numbers': return pdfAddPageNumbers(ctx);
+    case 'pdf.delete_pages':    return pdfDeletePages(ctx);
+    case 'pdf.watermark':       return pdfWatermark(ctx);
+    case 'pdf.crop':            return pdfCropStub(ctx);
+    case 'pdf.protect':         return pdfProtectStub(ctx);
+    case 'pdf.unlock':          return pdfUnlockStub(ctx);
+    case 'pdf.sign':            return pdfSignStub(ctx);
+    case 'pdf.redact':          return pdfRedactStub(ctx);
+    case 'pdf.compare':         return pdfCompareStub(ctx);
+    case 'pdf.annotate':        return pdfAnnotateStub(ctx);
+    case 'pdf.repair':          return pdfRepairStub(ctx);
+    case 'pdf.ocr':             return pdfOcrStub(ctx);
+    case 'pdf.extract_images':  return pdfExtractImagesStub(ctx);
+    case 'pdf.scan':            return pdfScanStub(ctx);
+    case 'pdf.to_text':         return pdfToTextStub(ctx);
+    case 'pdf.to_docx':         return pdfToDocxStub(ctx);
+    case 'pdf.to_pptx':         return pdfToPptxStub(ctx);
+    case 'pdf.to_xlsx':         return pdfToXlsxStub(ctx);
+    case 'pdf.to_html':         return pdfToHtmlStub(ctx);
     default:
       throw new Error(`Неизвестная PDF-операция: ${ctx.job.operationType}`);
   }
@@ -737,3 +756,223 @@ function parsePageNumbersRaw(input: string): number[] {
 
   return [...new Set(result)].sort((a, b) => a - b);
 }
+
+// ──────────────────────────────────────────────
+// ADD PAGE NUMBERS — нумерация страниц
+// ──────────────────────────────────────────────
+
+async function pdfAddPageNumbers(ctx: JobContext): Promise<JobResult> {
+  const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
+  const { job, options, storageDirs } = ctx;
+
+  const inputPath = join(storageDirs.original, basename(job.storedOriginalPath));
+  const pdfBytes = await readFile(inputPath);
+  const pdfDoc = await PDFDocument.load(pdfBytes);
+  const pages = pdfDoc.getPages();
+  const totalPages = pages.length;
+
+  // Parse options
+  const position = options.position || 'bottom-center';
+  const startNumber = parseInt(options.startNumber || '1', 10);
+  const fromPage = Math.max(1, parseInt(options.fromPage || '1', 10));
+  const toPage = Math.min(totalPages, parseInt(options.toPage || String(totalPages), 10));
+  const fontSize = parseInt(options.fontSize || '12', 10);
+  const textTemplate = options.textPreset === 'custom'
+    ? (options.customText || '{n}')
+    : (options.textPreset || '{n}');
+  const isBold = options.bold === 'true';
+  const isItalic = options.italic === 'true';
+  const margin = options.margin || 'standard';
+
+  // Parse color
+  let r = 0, g = 0, b = 0;
+  const colorHex = options.textColor || '#000000';
+  if (colorHex.startsWith('#') && colorHex.length === 7) {
+    r = parseInt(colorHex.slice(1, 3), 16) / 255;
+    g = parseInt(colorHex.slice(3, 5), 16) / 255;
+    b = parseInt(colorHex.slice(5, 7), 16) / 255;
+  }
+
+  // Choose font
+  let fontKey = StandardFonts.Helvetica;
+  if (isBold && isItalic) fontKey = StandardFonts.HelveticaBoldOblique;
+  else if (isBold) fontKey = StandardFonts.HelveticaBold;
+  else if (isItalic) fontKey = StandardFonts.HelveticaOblique;
+
+  const fontFamily = options.fontFamily || 'Arial';
+  if (fontFamily.includes('Times') || fontFamily.includes('Georgia') || fontFamily.includes('Palatino') || fontFamily.includes('Garamond')) {
+    if (isBold && isItalic) fontKey = StandardFonts.TimesRomanBoldItalic;
+    else if (isBold) fontKey = StandardFonts.TimesRomanBold;
+    else if (isItalic) fontKey = StandardFonts.TimesRomanItalic;
+    else fontKey = StandardFonts.TimesRoman;
+  } else if (fontFamily.includes('Courier')) {
+    if (isBold && isItalic) fontKey = StandardFonts.CourierBoldOblique;
+    else if (isBold) fontKey = StandardFonts.CourierBold;
+    else if (isItalic) fontKey = StandardFonts.CourierOblique;
+    else fontKey = StandardFonts.Courier;
+  }
+
+  const font = await pdfDoc.embedFont(fontKey);
+
+  // Margin offsets
+  const marginPx = margin === 'closer' ? 40 : margin === 'further' ? 15 : 25;
+
+  for (let i = fromPage - 1; i < toPage && i < totalPages; i++) {
+    const page = pages[i];
+    const { width, height } = page.getSize();
+    const pageNumber = startNumber + (i - (fromPage - 1));
+    const text = textTemplate
+      .replace(/\{n\}/g, String(pageNumber))
+      .replace(/\{p\}/g, String(totalPages))
+      .replace(/\{total\}/g, String(totalPages));
+
+    const textWidth = font.widthOfTextAtSize(text, fontSize);
+
+    // Calculate x, y based on position
+    let x = 0, y = 0;
+
+    if (position.includes('left')) x = marginPx;
+    else if (position.includes('right')) x = width - textWidth - marginPx;
+    else x = (width - textWidth) / 2; // center
+
+    if (position.includes('top')) y = height - marginPx;
+    else if (position.includes('bottom')) y = marginPx;
+    else y = height / 2; // middle
+
+    page.drawText(text, {
+      x, y,
+      size: fontSize,
+      font,
+      color: rgb(r, g, b),
+    });
+  }
+
+  const outputBytes = await pdfDoc.save();
+  const outputName = `${randomUUID()}.pdf`;
+  const outputPath = join(storageDirs.processed, outputName);
+  await writeFile(outputPath, outputBytes);
+
+  const originalName = job.originalFilename.replace(/\.[^.]+$/, '');
+
+  return {
+    outputFilename: `${originalName}_numbered.pdf`,
+    storedOutputPath: outputPath,
+    fileSizeAfter: outputBytes.length,
+  };
+}
+
+// ──────────────────────────────────────────────
+// DELETE PAGES
+// ──────────────────────────────────────────────
+
+async function pdfDeletePages(ctx: JobContext): Promise<JobResult> {
+  const { PDFDocument } = require('pdf-lib');
+  const { job, options, storageDirs } = ctx;
+
+  const inputPath = join(storageDirs.original, basename(job.storedOriginalPath));
+  const pdfBytes = await readFile(inputPath);
+  const sourcePdf = await PDFDocument.load(pdfBytes);
+  const totalPages = sourcePdf.getPageCount();
+
+  const pagesToDelete = parsePageNumbers(options.pages || '', totalPages);
+  const pagesToKeep = Array.from({ length: totalPages }, (_, i) => i)
+    .filter((i) => !pagesToDelete.includes(i));
+
+  if (pagesToKeep.length === 0) throw new Error('Нельзя удалить все страницы');
+
+  const newPdf = await PDFDocument.create();
+  const copiedPages = await newPdf.copyPages(sourcePdf, pagesToKeep);
+  for (const page of copiedPages) newPdf.addPage(page);
+
+  const outputBytes = await newPdf.save();
+  const outputName = `${randomUUID()}.pdf`;
+  const outputPath = join(storageDirs.processed, outputName);
+  await writeFile(outputPath, outputBytes);
+
+  const originalName = job.originalFilename.replace(/\.[^.]+$/, '');
+  return {
+    outputFilename: `${originalName}_trimmed.pdf`,
+    storedOutputPath: outputPath,
+    fileSizeAfter: outputBytes.length,
+  };
+}
+
+// ──────────────────────────────────────────────
+// WATERMARK
+// ──────────────────────────────────────────────
+
+async function pdfWatermark(ctx: JobContext): Promise<JobResult> {
+  const { PDFDocument, rgb, StandardFonts, degrees } = require('pdf-lib');
+  const { job, options, storageDirs } = ctx;
+
+  const inputPath = join(storageDirs.original, basename(job.storedOriginalPath));
+  const pdfBytes = await readFile(inputPath);
+  const pdfDoc = await PDFDocument.load(pdfBytes);
+  const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const text = options.text || 'WATERMARK';
+  const opacity = parseInt(options.opacity || '30', 10) / 100;
+
+  for (const page of pdfDoc.getPages()) {
+    const { width, height } = page.getSize();
+    const fontSize = Math.min(width, height) / 8;
+    const textWidth = font.widthOfTextAtSize(text, fontSize);
+
+    page.drawText(text, {
+      x: (width - textWidth * 0.7) / 2,
+      y: height / 2 - fontSize / 2,
+      size: fontSize,
+      font,
+      color: rgb(0.5, 0.5, 0.5),
+      opacity,
+      rotate: degrees(45),
+    });
+  }
+
+  const outputBytes = await pdfDoc.save();
+  const outputName = `${randomUUID()}.pdf`;
+  const outputPath = join(storageDirs.processed, outputName);
+  await writeFile(outputPath, outputBytes);
+
+  const originalName = job.originalFilename.replace(/\.[^.]+$/, '');
+  return {
+    outputFilename: `${originalName}_watermarked.pdf`,
+    storedOutputPath: outputPath,
+    fileSizeAfter: outputBytes.length,
+  };
+}
+
+// ──────────────────────────────────────────────
+// STUBS — заглушки для ещё не реализованных операций
+// ──────────────────────────────────────────────
+
+async function stubCopyFile(ctx: JobContext, suffix: string): Promise<JobResult> {
+  const { job, storageDirs } = ctx;
+  const inputPath = join(storageDirs.original, basename(job.storedOriginalPath));
+  const pdfBytes = await readFile(inputPath);
+  const outputName = `${randomUUID()}.pdf`;
+  const outputPath = join(storageDirs.processed, outputName);
+  await writeFile(outputPath, pdfBytes);
+  const originalName = job.originalFilename.replace(/\.[^.]+$/, '');
+  return {
+    outputFilename: `${originalName}_${suffix}.pdf`,
+    storedOutputPath: outputPath,
+    fileSizeAfter: pdfBytes.length,
+  };
+}
+
+async function pdfCropStub(ctx: JobContext): Promise<JobResult> { return stubCopyFile(ctx, 'cropped'); }
+async function pdfProtectStub(ctx: JobContext): Promise<JobResult> { return stubCopyFile(ctx, 'protected'); }
+async function pdfUnlockStub(ctx: JobContext): Promise<JobResult> { return stubCopyFile(ctx, 'unlocked'); }
+async function pdfSignStub(ctx: JobContext): Promise<JobResult> { return stubCopyFile(ctx, 'signed'); }
+async function pdfRedactStub(ctx: JobContext): Promise<JobResult> { return stubCopyFile(ctx, 'redacted'); }
+async function pdfCompareStub(ctx: JobContext): Promise<JobResult> { return stubCopyFile(ctx, 'compared'); }
+async function pdfAnnotateStub(ctx: JobContext): Promise<JobResult> { return stubCopyFile(ctx, 'annotated'); }
+async function pdfRepairStub(ctx: JobContext): Promise<JobResult> { return stubCopyFile(ctx, 'repaired'); }
+async function pdfOcrStub(ctx: JobContext): Promise<JobResult> { return stubCopyFile(ctx, 'ocr'); }
+async function pdfExtractImagesStub(ctx: JobContext): Promise<JobResult> { return stubCopyFile(ctx, 'images'); }
+async function pdfScanStub(ctx: JobContext): Promise<JobResult> { return stubCopyFile(ctx, 'scanned'); }
+async function pdfToTextStub(ctx: JobContext): Promise<JobResult> { return stubCopyFile(ctx, 'text'); }
+async function pdfToDocxStub(ctx: JobContext): Promise<JobResult> { return stubCopyFile(ctx, 'docx'); }
+async function pdfToPptxStub(ctx: JobContext): Promise<JobResult> { return stubCopyFile(ctx, 'pptx'); }
+async function pdfToXlsxStub(ctx: JobContext): Promise<JobResult> { return stubCopyFile(ctx, 'xlsx'); }
+async function pdfToHtmlStub(ctx: JobContext): Promise<JobResult> { return stubCopyFile(ctx, 'html'); }
