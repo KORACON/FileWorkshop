@@ -120,6 +120,18 @@ const TOOLS: ToolCard[] = [
   { id: 'docx-to-rtf', actionId: 'doc-to-rtf', name: 'DOCX в RTF', description: 'Конвертируйте Word в RTF', category: 'doc-convert', from: 'docx', to: 'rtf' },
 ];
 
+// Category icons for cards
+const CAT_ICONS: Record<string, { icon: string; bg: string; border: string }> = {
+  'img-convert': { icon: '🖼', bg: 'bg-amber-50', border: 'border-amber-200' },
+  'img-edit': { icon: '✨', bg: 'bg-violet-50', border: 'border-violet-200' },
+  'pdf-organize': { icon: '📑', bg: 'bg-orange-50', border: 'border-orange-200' },
+  'pdf-optimize': { icon: '⚡', bg: 'bg-green-50', border: 'border-green-200' },
+  'pdf-convert': { icon: '🔄', bg: 'bg-blue-50', border: 'border-blue-200' },
+  'pdf-edit': { icon: '✏️', bg: 'bg-purple-50', border: 'border-purple-200' },
+  'pdf-protect': { icon: '🛡', bg: 'bg-sky-50', border: 'border-sky-200' },
+  'doc-convert': { icon: '📝', bg: 'bg-teal-50', border: 'border-teal-200' },
+};
+
 export default function ToolsPage() {
   const [activeCategory, setActiveCategory] = useState('all');
   const router = useRouter();
@@ -128,7 +140,8 @@ export default function ToolsPage() {
 
   return (
     <div className="bg-bg min-h-screen">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10">
+      {/* Full width */}
+      <div className="px-4 sm:px-6 lg:px-10 xl:px-16 py-10">
         <div className="text-center mb-8">
           <h1 className="text-hero font-display text-txt-strong mb-3">Инструменты</h1>
           <p className="text-body text-txt-muted max-w-xl mx-auto">
@@ -154,30 +167,48 @@ export default function ToolsPage() {
           })}
         </div>
 
-        {/* Tool cards — bigger, uniform height */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {filtered.map((tool) => (
-            <button key={tool.id} onClick={() => router.push(`/tool/${tool.id}`)}
-              className="card-interactive p-5 text-left flex flex-col gap-3 min-h-[140px]">
-              <h3 className="text-h3 text-txt-strong">{tool.name}</h3>
-              <p className="text-small text-txt-muted leading-relaxed flex-1">{tool.description}</p>
-              {(tool.from || tool.to) && (
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  {tool.from.split(' ').filter(Boolean).slice(0, 3).map((f) => (
-                    <span key={f} className="badge badge-neutral text-micro">{f}</span>
-                  ))}
-                  {tool.to && (
-                    <>
-                      <span className="text-txt-faint text-micro">→</span>
-                      {tool.to.split(' ').filter(Boolean).slice(0, 2).map((t) => (
-                        <span key={t} className="badge badge-info text-micro">{t}</span>
-                      ))}
-                    </>
-                  )}
+        {/* Tool cards — full width grid, 5-6 columns */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+          {filtered.map((tool) => {
+            const style = CAT_ICONS[tool.category] || { icon: '📎', bg: 'bg-gray-50', border: 'border-gray-200' };
+            return (
+              <button key={tool.id} onClick={() => router.push(`/tool/${tool.id}`)}
+                className={cn(
+                  'bg-surface rounded-card border p-5 text-left flex flex-col gap-3 min-h-[180px]',
+                  'hover:shadow-card-hover hover:border-border-strong hover:-translate-y-1',
+                  'transition-all duration-200 cursor-pointer',
+                  'border-border',
+                )}>
+                {/* Icon */}
+                <div className={cn('w-11 h-11 rounded-xl flex items-center justify-center text-xl', style.bg, 'border', style.border)}>
+                  {style.icon}
                 </div>
-              )}
-            </button>
-          ))}
+
+                {/* Title */}
+                <h3 className="text-small font-semibold text-txt-strong leading-snug">{tool.name}</h3>
+
+                {/* Description */}
+                <p className="text-micro text-txt-muted leading-relaxed flex-1">{tool.description}</p>
+
+                {/* Format badges */}
+                {(tool.from || tool.to) && (
+                  <div className="flex items-center gap-1 flex-wrap">
+                    {tool.from.split(' ').filter(Boolean).slice(0, 2).map((f) => (
+                      <span key={f} className="text-micro text-txt-faint bg-bg-soft px-1.5 py-0.5 rounded">{f}</span>
+                    ))}
+                    {tool.to && (
+                      <>
+                        <span className="text-txt-faint text-micro">→</span>
+                        {tool.to.split(' ').filter(Boolean).slice(0, 1).map((t) => (
+                          <span key={t} className="text-micro text-accent bg-accent-50 px-1.5 py-0.5 rounded font-medium">{t}</span>
+                        ))}
+                      </>
+                    )}
+                  </div>
+                )}
+              </button>
+            );
+          })}
         </div>
 
         <p className="text-center text-caption text-txt-faint mt-8">
