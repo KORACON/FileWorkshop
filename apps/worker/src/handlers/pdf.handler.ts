@@ -309,96 +309,64 @@ async function pdfRotate(ctx: JobContext): Promise<JobResult> {
 // ──────────────────────────────────────────────
 
 /**
- * Сжимает PDF через pdf-lib + sharp.
- * Извлекает изображения, пережимает их через sharp, вставляет обратно.
+ * Сжимает PDF через Ghostscript.
+ * options.quality: "screen" | "ebook" | "printer"
  */
 async function pdfCompress(ctx: JobContext): Promise<JobResult> {
-  const { PDFDocument, PDFName, PDFRawStream } = require('pdf-lib');
-  const sharp = require('sharp');
-  const pako = require('pako');
   const { job, options, storageDirs } = ctx;
-
-  const inputPath = join(storageDirs.original, basename(job.storedOriginalPath));
-  const pdfBytes = await readFile(inputPath);
-  const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+  const outputName = `${randomUUID()}.pdf`;
+  const outputPath = join(storageDirs.processed, outputName);
 
   const quality = options.quality || 'ebook';
-  // Quality mapping: screen=30, ebook=60, printer=85
-  const jpegQuality = quality === 'screen' ? 30 : quality === 'printer' ? 85 : 60;
+  const validQualities = ['screen', 'ebook', 'printer'];
+  const pdfSettings = validQualities.includes(quality) ? quality : 'ebook';
 
-  // Iterate through all pages and compress embedded images
-  const pages = pdfDoc.getPages();
-  for (const page of pages) {
+  const inputPath = join(storageDirs.original, basename(job.storedOriginalPath));
+
+  // Try multiple Ghostscript paths
+  const gsPaths = [
+    'gswin64c',
+    'C:\\Program Files\\gs\\gs10.04.0\\bin\\gswin64c.exe',
+    'C:\\Program Files (x86)\\gs\\gs10.04.0\\bin\\gswin32c.exe',
+    'gs',
+  ];
+
+  let lastError: any = null;
+  for (const gsPath of gsPaths) {
     try {
-      const resources = page.node.get(PDFName.of('Resources'));
-      if (!resources) continue;
-      const xObjects = resources.get(PDFName.of('XObject'));
-      if (!xObjects) continue;
+      await execFileAsync(gsPath, [
+        '-sDEVICE=pdfwrite',
+        `-dPDFSETTINGS=/${pdfSettings}`,
+        '-dNOPAUSE',
+        '-dBATCH',
+        '-dQUIET',
+        '-dCompatibilityLevel=1.5',
+        `-sOutputFile=${outputPath}`,
+        inputPath,
+      ], { timeout: 180000 });
 
-      const entries = xObjects.entries ? xObjects.entries() : [];
-      for (const [name, ref] of entries) {
-        try {
-          const obj = pdfDoc.context.lookup(ref);
-          if (!obj || !obj.dict) continue;
-
-          const subtype = obj.dict.get(PDFName.of('Subtype'));
-          if (!subtype || subtype.toString() !== '/Image') continue;
-
-          const width = obj.dict.get(PDFName.of('Width'));
-          const height = obj.dict.get(PDFName.of('Height'));
-          if (!width || !height) continue;
-
-          const w = typeof width === 'object' && 'value' in width ? width.value : parseInt(String(width));
-          const h = typeof height === 'object' && 'value' in height ? height.value : parseInt(String(height));
-          if (!w || !h || w < 10 || h < 10) continue;
-
-          // Get raw image data
-          let imageData: Buffer;
-          try {
-            const stream = obj.getContents();
-            if (!stream || stream.length < 100) continue;
-
-            // Try to decode with sharp
-            const compressed = await sharp(Buffer.from(stream))
-              .resize(Math.min(w, quality === 'screen' ? 800 : quality === 'ebook' ? 1200 : w))
-              .jpeg({ quality: jpegQuality, mozjpeg: true })
-              .toBuffer();
-
-            // Only replace if actually smaller
-            if (compressed.length < stream.length * 0.9) {
-              // Create new image XObject with JPEG data
-              const jpegImage = await pdfDoc.embedJpg(compressed);
-              // Replace reference
-              xObjects.set(name, jpegImage.ref);
-            }
-          } catch {
-            // Skip images that can't be processed
-            continue;
-          }
-        } catch {
-          continue;
-        }
-      }
-    } catch {
-      continue;
+      const outputStat = await stat(outputPath);
+      return {
+        outputFilename: `compressed_${randomUUID().slice(0, 8)}.pdf`,
+        storedOutputPath: outputPath,
+        fileSizeAfter: outputStat.size,
+      };
+    } catch (err: any) {
+      lastError = err;
+      if (err.code !== 'ENOENT') throw new Error(`Ошибка сжатия: ${err.stderr || err.message}`);
     }
   }
 
-  // Strip metadata for maximum compression
+  // Fallback: pdf-lib simple re-save
+  const { PDFDocument } = require('pdf-lib');
+  const pdfBytes = await readFile(inputPath);
+  const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
   if (quality === 'screen') {
-    pdfDoc.setTitle('');
-    pdfDoc.setAuthor('');
-    pdfDoc.setSubject('');
-    pdfDoc.setKeywords([]);
-    pdfDoc.setProducer('');
-    pdfDoc.setCreator('');
+    pdfDoc.setTitle(''); pdfDoc.setAuthor(''); pdfDoc.setSubject('');
+    pdfDoc.setKeywords([]); pdfDoc.setProducer(''); pdfDoc.setCreator('');
   }
-
-  const outputBytes = await pdfDoc.save({ useObjectStreams: true, addDefaultPage: false });
-  const outputName = `${randomUUID()}.pdf`;
-  const outputPath = join(storageDirs.processed, outputName);
+  const outputBytes = await pdfDoc.save({ useObjectStreams: true });
   await writeFile(outputPath, outputBytes);
-
   return {
     outputFilename: `compressed_${randomUUID().slice(0, 8)}.pdf`,
     storedOutputPath: outputPath,
