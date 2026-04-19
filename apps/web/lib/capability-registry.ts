@@ -24,7 +24,7 @@ export type ActionGroup = 'quick' | 'convert' | 'edit' | 'optimize' | 'extra'
   | 'pdf-organize' | 'pdf-optimize' | 'pdf-edit' | 'pdf-protect';
 
 /** Какой UI-panel рендерить для этого действия */
-export type UiPanel = 'resize' | 'remove-bg' | 'generic' | 'instant' | 'pdf-page-numbers';
+export type UiPanel = 'resize' | 'remove-bg' | 'generic' | 'instant' | 'pdf-page-numbers' | 'pdf-compress';
 
 export interface ActionOption {
   key: string;
@@ -236,9 +236,9 @@ const ACTIONS: CapabilityAction[] = [
 
   // ─── PDF: Оптимизация ───
   { id: 'pdf-compress', name: 'Сжать PDF', description: 'Уменьшить размер файла',
-    icon: '', group: 'pdf-optimize', operationType: 'pdf.compress', uiPanel: 'generic', fileFamily: 'pdf',
+    icon: '', group: 'pdf-optimize', operationType: 'pdf.compress', uiPanel: 'pdf-compress', fileFamily: 'pdf',
     options: [{ key: 'quality', type: 'select', label: 'Качество', defaultValue: 'ebook',
-      choices: [{ value: 'screen', label: 'Минимальный (72 dpi)' }, { value: 'ebook', label: 'Баланс (150 dpi)' }, { value: 'printer', label: 'Печать (300 dpi)' }] }] },
+      choices: [{ value: 'screen', label: 'Экстремальное' }, { value: 'ebook', label: 'Рекомендуемое' }, { value: 'printer', label: 'Низкое' }] }] },
   { id: 'pdf-repair', name: 'Восстановить PDF', description: 'Исправить повреждённый файл',
     icon: '', group: 'pdf-optimize', operationType: 'pdf.repair', uiPanel: 'instant', fileFamily: 'pdf', options: [] },
   { id: 'pdf-ocr', name: 'OCR PDF', description: 'Распознать текст на сканах',

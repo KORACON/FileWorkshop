@@ -10,6 +10,7 @@ import { CompressPanel } from './compress-panel';
 import { ConvertPanel } from './convert-panel';
 import { InstantPanel } from './instant-panel';
 import { PdfPageNumbersPanel } from './pdf-page-numbers-panel';
+import { PdfCompressPanel } from './pdf-compress-panel';
 
 interface Props {
   action: CapabilityAction;
@@ -59,6 +60,9 @@ export function PanelRouter(props: Props) {
 
     case 'pdf-page-numbers':
       return <PdfPageNumbersPanel values={values} onChange={onChange} totalPages={props.pdfTotalPages || 0} />;
+
+    case 'pdf-compress':
+      return <PdfCompressPanel values={values} onChange={onChange} />;
 
     case 'generic':
     default:
