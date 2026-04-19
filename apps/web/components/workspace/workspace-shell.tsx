@@ -25,6 +25,9 @@ import { PanelRouter } from './panels/panel-router';
 export function WorkspaceShell() {
   const ws = useWorkspaceStore();
   const { isAuthenticated } = useAuthStore();
+
+  // Hydrate session on mount
+  useEffect(() => { ws._hydrate(); }, []); // eslint-disable-line
   const queryClient = useQueryClient();
 
   const { upload, isUploading, error: uploadError } = useUpload();

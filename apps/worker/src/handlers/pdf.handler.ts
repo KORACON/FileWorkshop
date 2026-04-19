@@ -762,12 +762,15 @@ function parsePageNumbersRaw(input: string): number[] {
 // ──────────────────────────────────────────────
 
 async function pdfAddPageNumbers(ctx: JobContext): Promise<JobResult> {
-  const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
+  const { PDFDocument, rgb } = require('pdf-lib');
+  const fontkit = require('@pdf-lib/fontkit');
   const { job, options, storageDirs } = ctx;
 
   const inputPath = join(storageDirs.original, basename(job.storedOriginalPath));
   const pdfBytes = await readFile(inputPath);
   const pdfDoc = await PDFDocument.load(pdfBytes);
+  pdfDoc.registerFontkit(fontkit);
+
   const pages = pdfDoc.getPages();
   const totalPages = pages.length;
 
@@ -781,41 +784,37 @@ async function pdfAddPageNumbers(ctx: JobContext): Promise<JobResult> {
     ? (options.customText || '{n}')
     : (options.textPreset || '{n}');
   const isBold = options.bold === 'true';
-  const isItalic = options.italic === 'true';
   const margin = options.margin || 'standard';
 
   // Parse color
-  let r = 0, g = 0, b = 0;
+  let cr = 0, cg = 0, cb = 0;
   const colorHex = options.textColor || '#000000';
   if (colorHex.startsWith('#') && colorHex.length === 7) {
-    r = parseInt(colorHex.slice(1, 3), 16) / 255;
-    g = parseInt(colorHex.slice(3, 5), 16) / 255;
-    b = parseInt(colorHex.slice(5, 7), 16) / 255;
+    cr = parseInt(colorHex.slice(1, 3), 16) / 255;
+    cg = parseInt(colorHex.slice(3, 5), 16) / 255;
+    cb = parseInt(colorHex.slice(5, 7), 16) / 255;
   }
 
-  // Choose font
-  let fontKey = StandardFonts.Helvetica;
-  if (isBold && isItalic) fontKey = StandardFonts.HelveticaBoldOblique;
-  else if (isBold) fontKey = StandardFonts.HelveticaBold;
-  else if (isItalic) fontKey = StandardFonts.HelveticaOblique;
-
-  const fontFamily = options.fontFamily || 'Arial';
-  if (fontFamily.includes('Times') || fontFamily.includes('Georgia') || fontFamily.includes('Palatino') || fontFamily.includes('Garamond')) {
-    if (isBold && isItalic) fontKey = StandardFonts.TimesRomanBoldItalic;
-    else if (isBold) fontKey = StandardFonts.TimesRomanBold;
-    else if (isItalic) fontKey = StandardFonts.TimesRomanItalic;
-    else fontKey = StandardFonts.TimesRoman;
-  } else if (fontFamily.includes('Courier')) {
-    if (isBold && isItalic) fontKey = StandardFonts.CourierBoldOblique;
-    else if (isBold) fontKey = StandardFonts.CourierBold;
-    else if (isItalic) fontKey = StandardFonts.CourierOblique;
-    else fontKey = StandardFonts.Courier;
+  // Load system font with Cyrillic support
+  let fontPath = 'C:\\Windows\\Fonts\\arial.ttf';
+  if (isBold) fontPath = 'C:\\Windows\\Fonts\\arialbd.ttf';
+  
+  let font: any;
+  try {
+    const fontBytes = await readFile(fontPath);
+    font = await pdfDoc.embedFont(fontBytes);
+  } catch {
+    // Fallback to standard font (no Cyrillic)
+    const { StandardFonts } = require('pdf-lib');
+    font = await pdfDoc.embedFont(isBold ? StandardFonts.HelveticaBold : StandardFonts.Helvetica);
   }
 
-  const font = await pdfDoc.embedFont(fontKey);
-
-  // Margin offsets
-  const marginPx = margin === 'closer' ? 40 : margin === 'further' ? 15 : 25;
+  // Margin offsets — ensure text stays within page bounds
+  const marginStd = 25;
+  const marginCloser = 40;
+  const marginFurther = 12;
+  const marginPx = margin === 'closer' ? marginCloser : margin === 'further' ? marginFurther : marginStd;
+  const minMargin = 8; // absolute minimum from edge
 
   for (let i = fromPage - 1; i < toPage && i < totalPages; i++) {
     const page = pages[i];
@@ -828,22 +827,25 @@ async function pdfAddPageNumbers(ctx: JobContext): Promise<JobResult> {
 
     const textWidth = font.widthOfTextAtSize(text, fontSize);
 
-    // Calculate x, y based on position
+    // Calculate x, y — clamp to stay within page
     let x = 0, y = 0;
 
     if (position.includes('left')) x = marginPx;
-    else if (position.includes('right')) x = width - textWidth - marginPx;
-    else x = (width - textWidth) / 2; // center
+    else if (position.includes('right')) x = Math.max(minMargin, width - textWidth - marginPx);
+    else x = (width - textWidth) / 2;
 
-    if (position.includes('top')) y = height - marginPx;
-    else if (position.includes('bottom')) y = marginPx;
-    else y = height / 2; // middle
+    if (position.includes('top')) y = Math.min(height - minMargin - fontSize, height - marginPx);
+    else if (position.includes('bottom')) y = Math.max(minMargin, marginPx);
+    else y = height / 2;
+
+    // Ensure x doesn't go negative
+    x = Math.max(minMargin, x);
 
     page.drawText(text, {
       x, y,
       size: fontSize,
       font,
-      color: rgb(r, g, b),
+      color: rgb(cr, cg, cb),
     });
   }
 
@@ -852,10 +854,8 @@ async function pdfAddPageNumbers(ctx: JobContext): Promise<JobResult> {
   const outputPath = join(storageDirs.processed, outputName);
   await writeFile(outputPath, outputBytes);
 
-  const originalName = job.originalFilename.replace(/\.[^.]+$/, '');
-
   return {
-    outputFilename: `${originalName}_numbered.pdf`,
+    outputFilename: `numbered_${randomUUID().slice(0, 8)}.pdf`,
     storedOutputPath: outputPath,
     fileSizeAfter: outputBytes.length,
   };
