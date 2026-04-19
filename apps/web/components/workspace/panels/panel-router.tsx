@@ -62,7 +62,7 @@ export function PanelRouter(props: Props) {
       return <PdfPageNumbersPanel values={values} onChange={onChange} totalPages={props.pdfTotalPages || 0} />;
 
     case 'pdf-compress':
-      return <PdfCompressPanel values={values} onChange={onChange} />;
+      return <PdfCompressPanel values={values} onChange={onChange} fileSize={props.fileSize} />;
 
     case 'generic':
     default:

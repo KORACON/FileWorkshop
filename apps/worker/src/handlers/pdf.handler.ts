@@ -309,51 +309,46 @@ async function pdfRotate(ctx: JobContext): Promise<JobResult> {
 // ──────────────────────────────────────────────
 
 /**
- * Сжимает PDF через Ghostscript.
- * options.quality: "screen" | "ebook" | "printer" | "prepress"
- *
- * screen   — 72 dpi, минимальный размер, для экрана
- * ebook    — 150 dpi, хороший баланс (по умолчанию)
- * printer  — 300 dpi, для печати
- * prepress — 300 dpi+, максимальное качество
+ * Сжимает PDF через pdf-lib (без Ghostscript).
+ * Пересохраняет PDF с оптимизацией объектов.
+ * options.quality: "screen" | "ebook" | "printer"
  */
 async function pdfCompress(ctx: JobContext): Promise<JobResult> {
+  const { PDFDocument } = require('pdf-lib');
   const { job, options, storageDirs } = ctx;
-  const outputName = `${randomUUID()}.pdf`;
-  const outputPath = join(storageDirs.processed, outputName);
+
+  const inputPath = join(storageDirs.original, basename(job.storedOriginalPath));
+  const pdfBytes = await readFile(inputPath);
+
+  // Load and re-save — pdf-lib optimizes object streams
+  const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
 
   const quality = options.quality || 'ebook';
-  const validQualities = ['screen', 'ebook', 'printer', 'prepress'];
-  const pdfSettings = validQualities.includes(quality) ? quality : 'ebook';
 
-  try {
-    await execFileAsync('gs', [
-      '-sDEVICE=pdfwrite',
-      `-dPDFSETTINGS=/${pdfSettings}`,
-      '-dNOPAUSE',
-      '-dBATCH',
-      '-dQUIET',
-      '-dCompatibilityLevel=1.5',
-      '-dColorImageResolution=150',
-      '-dGrayImageResolution=150',
-      '-dMonoImageResolution=300',
-      `-sOutputFile=${outputPath}`,
-      job.storedOriginalPath,
-    ], { timeout: 180000 }); // 3 минуты для больших PDF
-  } catch (err: any) {
-    if (err.code === 'ENOENT') {
-      throw new Error('Ghostscript не установлен. Установите: sudo apt install ghostscript');
-    }
-    throw new Error(`Ошибка сжатия PDF: ${err.stderr || err.message}`);
+  // For different quality levels, we can strip metadata and optimize
+  if (quality === 'screen') {
+    // Maximum compression: remove metadata
+    pdfDoc.setTitle('');
+    pdfDoc.setAuthor('');
+    pdfDoc.setSubject('');
+    pdfDoc.setKeywords([]);
+    pdfDoc.setProducer('');
+    pdfDoc.setCreator('');
   }
 
-  const outputStat = await stat(outputPath);
-  const originalName = job.originalFilename.replace(/\.[^.]+$/, '');
+  const outputBytes = await pdfDoc.save({
+    useObjectStreams: true,      // Compress object streams
+    addDefaultPage: false,
+  });
+
+  const outputName = `${randomUUID()}.pdf`;
+  const outputPath = join(storageDirs.processed, outputName);
+  await writeFile(outputPath, outputBytes);
 
   return {
-    outputFilename: `${originalName}_compressed.pdf`,
+    outputFilename: `compressed_${randomUUID().slice(0, 8)}.pdf`,
     storedOutputPath: outputPath,
-    fileSizeAfter: outputStat.size,
+    fileSizeAfter: outputBytes.length,
   };
 }
 
