@@ -25,6 +25,12 @@ const CATEGORIES = [
   { id: 'pdf-edit', label: 'Редактировать PDF' },
   { id: 'pdf-protect', label: 'Защита PDF' },
   { id: 'doc-convert', label: 'Документы' },
+  { id: 'audio', label: 'Аудио' },
+  { id: 'video', label: 'Видео' },
+  { id: 'ebooks', label: 'Электронные книги' },
+  { id: 'spreadsheets', label: 'Таблицы' },
+  { id: 'presentations', label: 'Презентации' },
+  { id: 'archives', label: 'Архивы' },
 ];
 
 // ═══ Image conversions — unique pairs only ═══
@@ -118,6 +124,66 @@ const TOOLS: ToolCard[] = [
   { id: 'docx-to-txt', actionId: 'doc-to-txt', name: 'DOCX в TXT', description: 'Извлеките чистый текст из Word-документа', category: 'doc-convert', from: 'docx', to: 'txt' },
   { id: 'docx-to-odt', actionId: 'doc-to-odt', name: 'DOCX в ODT', description: 'Конвертируйте Word в формат LibreOffice', category: 'doc-convert', from: 'docx', to: 'odt' },
   { id: 'docx-to-rtf', actionId: 'doc-to-rtf', name: 'DOCX в RTF', description: 'Конвертируйте Word в RTF', category: 'doc-convert', from: 'docx', to: 'rtf' },
+
+  // ═══ Аудио ═══
+  { id: 'mp3-to-wav', actionId: 'audio-convert', name: 'MP3 в WAV', description: 'Конвертируйте MP3 в несжатый WAV формат высокого качества', category: 'audio', from: 'mp3', to: 'wav' },
+  { id: 'wav-to-mp3', actionId: 'audio-convert', name: 'WAV в MP3', description: 'Сожмите WAV в компактный MP3 с настройкой битрейта', category: 'audio', from: 'wav', to: 'mp3' },
+  { id: 'mp3-to-flac', actionId: 'audio-convert', name: 'MP3 в FLAC', description: 'Конвертируйте MP3 в формат без потерь FLAC', category: 'audio', from: 'mp3', to: 'flac' },
+  { id: 'flac-to-mp3', actionId: 'audio-convert', name: 'FLAC в MP3', description: 'Сожмите FLAC в MP3 для экономии места и совместимости', category: 'audio', from: 'flac', to: 'mp3' },
+  { id: 'wav-to-flac', actionId: 'audio-convert', name: 'WAV в FLAC', description: 'Сожмите WAV без потерь в формат FLAC', category: 'audio', from: 'wav', to: 'flac' },
+  { id: 'mp3-to-ogg', actionId: 'audio-convert', name: 'MP3 в OGG', description: 'Конвертируйте MP3 в открытый формат OGG Vorbis', category: 'audio', from: 'mp3', to: 'ogg' },
+  { id: 'ogg-to-mp3', actionId: 'audio-convert', name: 'OGG в MP3', description: 'Конвертируйте OGG Vorbis в универсальный MP3', category: 'audio', from: 'ogg', to: 'mp3' },
+  { id: 'mp3-to-aac', actionId: 'audio-convert', name: 'MP3 в AAC', description: 'Конвертируйте MP3 в AAC — преемник MP3 с лучшим качеством', category: 'audio', from: 'mp3', to: 'aac' },
+  { id: 'aac-to-mp3', actionId: 'audio-convert', name: 'AAC в MP3', description: 'Конвертируйте AAC в MP3 для максимальной совместимости', category: 'audio', from: 'aac', to: 'mp3' },
+  { id: 'wma-to-mp3', actionId: 'audio-convert', name: 'WMA в MP3', description: 'Конвертируйте Windows Media Audio в универсальный MP3', category: 'audio', from: 'wma', to: 'mp3' },
+  { id: 'm4a-to-mp3', actionId: 'audio-convert', name: 'M4A в MP3', description: 'Конвертируйте Apple M4A в MP3 для всех устройств', category: 'audio', from: 'm4a', to: 'mp3' },
+  { id: 'mp3-to-m4a', actionId: 'audio-convert', name: 'MP3 в M4A', description: 'Конвертируйте MP3 в M4A для Apple устройств', category: 'audio', from: 'mp3', to: 'm4a' },
+
+  // ═══ Видео ═══
+  { id: 'mp4-to-avi', actionId: 'video-convert', name: 'MP4 в AVI', description: 'Конвертируйте MP4 в классический формат AVI', category: 'video', from: 'mp4', to: 'avi' },
+  { id: 'avi-to-mp4', actionId: 'video-convert', name: 'AVI в MP4', description: 'Конвертируйте AVI в универсальный MP4 для веба', category: 'video', from: 'avi', to: 'mp4' },
+  { id: 'mp4-to-mkv', actionId: 'video-convert', name: 'MP4 в MKV', description: 'Конвертируйте MP4 в контейнер Matroska MKV', category: 'video', from: 'mp4', to: 'mkv' },
+  { id: 'mkv-to-mp4', actionId: 'video-convert', name: 'MKV в MP4', description: 'Конвертируйте MKV в MP4 для максимальной совместимости', category: 'video', from: 'mkv', to: 'mp4' },
+  { id: 'mov-to-mp4', actionId: 'video-convert', name: 'MOV в MP4', description: 'Конвертируйте Apple QuickTime MOV в универсальный MP4', category: 'video', from: 'mov', to: 'mp4' },
+  { id: 'mp4-to-webm', actionId: 'video-convert', name: 'MP4 в WEBM', description: 'Конвертируйте MP4 в открытый формат WEBM для веба', category: 'video', from: 'mp4', to: 'webm' },
+  { id: 'webm-to-mp4', actionId: 'video-convert', name: 'WEBM в MP4', description: 'Конвертируйте WEBM в MP4 для всех устройств', category: 'video', from: 'webm', to: 'mp4' },
+  { id: 'wmv-to-mp4', actionId: 'video-convert', name: 'WMV в MP4', description: 'Конвертируйте Windows Media Video в MP4', category: 'video', from: 'wmv', to: 'mp4' },
+  { id: 'flv-to-mp4', actionId: 'video-convert', name: 'FLV в MP4', description: 'Конвертируйте Flash Video в современный MP4', category: 'video', from: 'flv', to: 'mp4' },
+  { id: 'mp4-to-gif', actionId: 'video-convert', name: 'MP4 в GIF', description: 'Создайте анимированный GIF из видеофайла MP4', category: 'video', from: 'mp4', to: 'gif' },
+  { id: '3gp-to-mp4', actionId: 'video-convert', name: '3GP в MP4', description: 'Конвертируйте мобильный 3GP в универсальный MP4', category: 'video', from: '3gp', to: 'mp4' },
+
+  // ═══ Электронные книги ═══
+  { id: 'epub-to-pdf', actionId: 'ebook-convert', name: 'EPUB в PDF', description: 'Конвертируйте электронную книгу EPUB в PDF для печати и чтения', category: 'ebooks', from: 'epub', to: 'pdf' },
+  { id: 'epub-to-mobi', actionId: 'ebook-convert', name: 'EPUB в MOBI', description: 'Конвертируйте EPUB в MOBI для Amazon Kindle', category: 'ebooks', from: 'epub', to: 'mobi' },
+  { id: 'mobi-to-epub', actionId: 'ebook-convert', name: 'MOBI в EPUB', description: 'Конвертируйте Kindle MOBI в универсальный EPUB', category: 'ebooks', from: 'mobi', to: 'epub' },
+  { id: 'mobi-to-pdf', actionId: 'ebook-convert', name: 'MOBI в PDF', description: 'Конвертируйте Kindle MOBI в PDF для чтения на любом устройстве', category: 'ebooks', from: 'mobi', to: 'pdf' },
+  { id: 'fb2-to-epub', actionId: 'ebook-convert', name: 'FB2 в EPUB', description: 'Конвертируйте FictionBook в универсальный EPUB', category: 'ebooks', from: 'fb2', to: 'epub' },
+  { id: 'fb2-to-pdf', actionId: 'ebook-convert', name: 'FB2 в PDF', description: 'Конвертируйте FictionBook в PDF для печати', category: 'ebooks', from: 'fb2', to: 'pdf' },
+  { id: 'epub-to-fb2', actionId: 'ebook-convert', name: 'EPUB в FB2', description: 'Конвертируйте EPUB в формат FictionBook', category: 'ebooks', from: 'epub', to: 'fb2' },
+  { id: 'pdf-to-epub', actionId: 'ebook-convert', name: 'PDF в EPUB', description: 'Конвертируйте PDF в электронную книгу EPUB', category: 'ebooks', from: 'pdf', to: 'epub' },
+  { id: 'azw3-to-epub', actionId: 'ebook-convert', name: 'AZW3 в EPUB', description: 'Конвертируйте Amazon Kindle AZW3 в EPUB', category: 'ebooks', from: 'azw3', to: 'epub' },
+
+  // ═══ Таблицы ═══
+  { id: 'xlsx-to-csv', actionId: 'spreadsheet-convert', name: 'XLSX в CSV', description: 'Конвертируйте Excel-таблицу в текстовый CSV с разделителями', category: 'spreadsheets', from: 'xlsx', to: 'csv' },
+  { id: 'csv-to-xlsx', actionId: 'spreadsheet-convert', name: 'CSV в XLSX', description: 'Конвертируйте CSV в полноценную Excel-таблицу', category: 'spreadsheets', from: 'csv', to: 'xlsx' },
+  { id: 'xlsx-to-ods', actionId: 'spreadsheet-convert', name: 'XLSX в ODS', description: 'Конвертируйте Excel в открытый формат LibreOffice Calc', category: 'spreadsheets', from: 'xlsx', to: 'ods' },
+  { id: 'ods-to-xlsx', actionId: 'spreadsheet-convert', name: 'ODS в XLSX', description: 'Конвертируйте LibreOffice Calc в формат Excel', category: 'spreadsheets', from: 'ods', to: 'xlsx' },
+  { id: 'xlsx-to-pdf', actionId: 'spreadsheet-convert', name: 'XLSX в PDF', description: 'Конвертируйте Excel-таблицу в PDF для печати и отправки', category: 'spreadsheets', from: 'xlsx', to: 'pdf' },
+  { id: 'xls-to-xlsx', actionId: 'spreadsheet-convert', name: 'XLS в XLSX', description: 'Обновите старый формат Excel до современного XLSX', category: 'spreadsheets', from: 'xls', to: 'xlsx' },
+
+  // ═══ Презентации ═══
+  { id: 'pptx-to-pdf', actionId: 'presentation-convert', name: 'PPTX в PDF', description: 'Конвертируйте PowerPoint-презентацию в PDF', category: 'presentations', from: 'pptx', to: 'pdf' },
+  { id: 'ppt-to-pptx', actionId: 'presentation-convert', name: 'PPT в PPTX', description: 'Обновите старый формат PowerPoint до современного PPTX', category: 'presentations', from: 'ppt', to: 'pptx' },
+  { id: 'pptx-to-odp', actionId: 'presentation-convert', name: 'PPTX в ODP', description: 'Конвертируйте PowerPoint в формат LibreOffice Impress', category: 'presentations', from: 'pptx', to: 'odp' },
+  { id: 'odp-to-pptx', actionId: 'presentation-convert', name: 'ODP в PPTX', description: 'Конвертируйте LibreOffice Impress в PowerPoint', category: 'presentations', from: 'odp', to: 'pptx' },
+  { id: 'pptx-to-jpg', actionId: 'presentation-convert', name: 'PPTX в JPG', description: 'Конвертируйте слайды презентации в изображения JPG', category: 'presentations', from: 'pptx', to: 'jpg' },
+
+  // ═══ Архивы ═══
+  { id: 'zip-extract', actionId: 'archive-extract', name: 'Распаковать ZIP', description: 'Извлеките файлы из ZIP-архива в браузере', category: 'archives', from: 'zip', to: '' },
+  { id: 'rar-extract', actionId: 'archive-extract', name: 'Распаковать RAR', description: 'Извлеките файлы из RAR-архива без WinRAR', category: 'archives', from: 'rar', to: '' },
+  { id: '7z-extract', actionId: 'archive-extract', name: 'Распаковать 7Z', description: 'Извлеките файлы из 7-Zip архива', category: 'archives', from: '7z', to: '' },
+  { id: 'tar-extract', actionId: 'archive-extract', name: 'Распаковать TAR', description: 'Извлеките файлы из TAR-архива (Unix)', category: 'archives', from: 'tar', to: '' },
+  { id: 'create-zip', actionId: 'archive-create', name: 'Создать ZIP', description: 'Упакуйте файлы в ZIP-архив для отправки и хранения', category: 'archives', from: '', to: 'zip' },
 ];
 
 // Category SVG icons — stroke-based, no background
@@ -142,6 +208,18 @@ function CatIcon({ category }: { category: string }) {
       return <svg {...props}><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>;
     case 'doc-convert':
       return <svg {...props}><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>;
+    case 'audio':
+      return <svg {...props}><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>;
+    case 'video':
+      return <svg {...props}><rect x="2" y="2" width="20" height="20" rx="2.18"/><path d="M10 8l6 4-6 4V8z"/></svg>;
+    case 'ebooks':
+      return <svg {...props}><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>;
+    case 'spreadsheets':
+      return <svg {...props}><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/></svg>;
+    case 'presentations':
+      return <svg {...props}><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>;
+    case 'archives':
+      return <svg {...props}><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>;
     default:
       return <svg {...props}><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><path d="M13 2v7h7"/></svg>;
   }
