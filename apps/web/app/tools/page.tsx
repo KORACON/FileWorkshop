@@ -120,17 +120,32 @@ const TOOLS: ToolCard[] = [
   { id: 'docx-to-rtf', actionId: 'doc-to-rtf', name: 'DOCX в RTF', description: 'Конвертируйте Word в RTF', category: 'doc-convert', from: 'docx', to: 'rtf' },
 ];
 
-// Category icons for cards
-const CAT_ICONS: Record<string, { icon: string; bg: string; border: string }> = {
-  'img-convert': { icon: '🖼', bg: 'bg-amber-50', border: 'border-amber-200' },
-  'img-edit': { icon: '✨', bg: 'bg-violet-50', border: 'border-violet-200' },
-  'pdf-organize': { icon: '📑', bg: 'bg-orange-50', border: 'border-orange-200' },
-  'pdf-optimize': { icon: '⚡', bg: 'bg-green-50', border: 'border-green-200' },
-  'pdf-convert': { icon: '🔄', bg: 'bg-blue-50', border: 'border-blue-200' },
-  'pdf-edit': { icon: '✏️', bg: 'bg-purple-50', border: 'border-purple-200' },
-  'pdf-protect': { icon: '🛡', bg: 'bg-sky-50', border: 'border-sky-200' },
-  'doc-convert': { icon: '📝', bg: 'bg-teal-50', border: 'border-teal-200' },
-};
+// Category SVG icons — stroke-based, no background
+function CatIcon({ category }: { category: string }) {
+  const cls = "w-8 h-8 text-steel";
+  const props = { width: 32, height: 32, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.5, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, className: cls };
+
+  switch (category) {
+    case 'img-convert':
+      return <svg {...props}><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="M15 9l3 3-3 3"/></svg>;
+    case 'img-edit':
+      return <svg {...props}><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>;
+    case 'pdf-organize':
+      return <svg {...props}><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="M9 15l3-3 3 3"/></svg>;
+    case 'pdf-optimize':
+      return <svg {...props}><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>;
+    case 'pdf-convert':
+      return <svg {...props}><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>;
+    case 'pdf-edit':
+      return <svg {...props}><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>;
+    case 'pdf-protect':
+      return <svg {...props}><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>;
+    case 'doc-convert':
+      return <svg {...props}><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>;
+    default:
+      return <svg {...props}><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><path d="M13 2v7h7"/></svg>;
+  }
+}
 
 export default function ToolsPage() {
   const [activeCategory, setActiveCategory] = useState('all');
@@ -170,7 +185,6 @@ export default function ToolsPage() {
         {/* Tool cards — full width grid, 5-6 columns */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
           {filtered.map((tool) => {
-            const style = CAT_ICONS[tool.category] || { icon: '📎', bg: 'bg-gray-50', border: 'border-gray-200' };
             return (
               <button key={tool.id} onClick={() => router.push(`/tool/${tool.id}`)}
                 className={cn(
@@ -179,10 +193,8 @@ export default function ToolsPage() {
                   'transition-all duration-200 cursor-pointer',
                   'border-border',
                 )}>
-                {/* Icon */}
-                <div className={cn('w-11 h-11 rounded-xl flex items-center justify-center text-xl', style.bg, 'border', style.border)}>
-                  {style.icon}
-                </div>
+                {/* Icon — SVG, no background */}
+                <CatIcon category={tool.category} />
 
                 {/* Title */}
                 <h3 className="text-small font-semibold text-txt-strong leading-snug">{tool.name}</h3>
